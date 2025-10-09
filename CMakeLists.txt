@@ -11,6 +11,18 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(VoxelGame ${SOURCES})
 
+include(FetchContent)
+
+FetchContent_Declare(
+        glm
+        GIT_REPOSITORY	https://github.com/g-truc/glm.git
+        GIT_TAG 	bf71a834948186f4097caa076cd2663c69a10e1e
+)
+
+FetchContent_MakeAvailable(glm)
+
+target_link_libraries(VoxelGame PRIVATE glm::glm)
+
 target_include_directories(VoxelGame PRIVATE
         ${CMAKE_SOURCE_DIR}/Libraries/include
 )
