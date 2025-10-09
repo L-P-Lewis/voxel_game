@@ -1,4 +1,4 @@
-#include "game/VoxelGame.h"
+#include "voxel_game.h"
 
 int main() {
 	const auto game = new VoxelGame;

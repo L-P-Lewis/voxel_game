@@ -1,11 +1,13 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 class Window;
 class GLFWwindow;
 class GameRenderer;
 
+/// Superclass representing the whole game
 class VoxelGame {
     static VoxelGame *instance;
     static constexpr float TICKS_PER_SECOND = 20.0;

@@ -1,9 +1,9 @@
-#include "VoxelGame.h"
+#include "voxel_game.h"
+#include "renderer.h"
+#include "window.h"
 
 #include <GLFW/glfw3.h>
 
-#include "../window/Window.h"
-#include "../renderer/GameRenderer.h"
 
 VoxelGame* VoxelGame::instance = nullptr;
 
