@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "../window/Window.h"
+#include "../renderer/GameRenderer.h"
 
 VoxelGame* VoxelGame::instance = nullptr;
 
@@ -11,6 +12,7 @@ VoxelGame::VoxelGame() {
     this->window = std::make_unique<Window>();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
+    this->gameRenderer = std::make_unique<GameRenderer>(*this);
 }
 
 VoxelGame::~VoxelGame() {
@@ -55,7 +57,7 @@ void VoxelGame::tick() {
 }
 
 void VoxelGame::render(float deltaTime) {
-    glClear(GL_COLOR_BUFFER_BIT);
+    gameRenderer->renderGame(deltaTime);
 }
 
 void VoxelGame::onResize(int width, int height) const {
@@ -64,6 +66,10 @@ void VoxelGame::onResize(int width, int height) const {
 
 Window &VoxelGame::getWindow() const {
     return *window;
+}
+
+GameRenderer &VoxelGame::getGameRenderer() const {
+    return *gameRenderer;
 }
 
 VoxelGame *VoxelGame::getInstance() {
