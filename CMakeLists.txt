@@ -11,6 +11,11 @@ file(GLOB_RECURSE SOURCES
 
 add_executable(VoxelGame ${SOURCES})
 
+add_custom_command(TARGET VoxelGame PRE_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${CMAKE_SOURCE_DIR}/assets
+        $<TARGET_FILE_DIR:VoxelGame>/assets)
+
 include(FetchContent)
 
 FetchContent_Declare(
