@@ -1,5 +1,6 @@
 #pragma once
 
+/// Dummy game class definition
 class VoxelGame;
 
 class GameRenderer {

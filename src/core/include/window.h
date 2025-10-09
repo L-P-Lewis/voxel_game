@@ -1,7 +1,9 @@
 #pragma once
 
+/// Dummy GLFWindow handle definition
 class GLFWwindow;
 
+/// Game Window Class
 class Window {
     int width;
     int height;
