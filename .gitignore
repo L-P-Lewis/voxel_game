@@ -2,4 +2,6 @@ out/
 compile_commands.json
 .cache/
 
+cmake-build-debug/**
+
 .idea/**
