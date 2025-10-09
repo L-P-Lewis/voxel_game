@@ -3,4 +3,19 @@ project(VoxelGame LANGUAGES C CXX)
 
 set (CMAKE_CXX_STANDARD 20)
 
-add_subdirectory("./src/")
+file(GLOB_RECURSE SOURCES
+        "src/*.cpp"
+        "src/*.h"
+        "Libraries/src/glad.c"
+)
+
+add_executable(VoxelGame ${SOURCES})
+
+target_include_directories(VoxelGame PRIVATE
+        ${CMAKE_SOURCE_DIR}/Libraries/include
+)
+
+target_link_libraries(VoxelGame PRIVATE
+        "${CMAKE_SOURCE_DIR}/Libraries/lib/glfw3.lib"
+        opengl32
+)
