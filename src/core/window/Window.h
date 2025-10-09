@@ -1,0 +1,21 @@
+#pragma once
+
+class GLFWwindow;
+
+class Window {
+    int width;
+    int height;
+    bool resizeable;
+    const char* title;
+    GLFWwindow* handle{};
+public:
+    Window(int width = 1600, int height = 900, bool resizeable = true, const char* title = "OpenGL Window");
+    ~Window();
+    void init();
+    void resize(int width, int height);
+    int getWidth() const;
+    int getHeight() const;
+    const char* getTitle() const;
+    GLFWwindow* getHandle() const;
+
+};
