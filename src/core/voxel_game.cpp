@@ -1,6 +1,6 @@
 #include "voxel_game.h"
-#include "renderer.h"
 #include "window.h"
+#include "app_layer.h"
 
 #include <GLFW/glfw3.h>
 
@@ -9,10 +9,9 @@ VoxelGame* VoxelGame::instance = nullptr;
 
 VoxelGame::VoxelGame() {
     instance = this;
-    this->window = std::make_unique<Window>();
+    this->window = new Window();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
-    this->gameRenderer = std::make_unique<GameRenderer>(*this);
 }
 
 VoxelGame::~VoxelGame() {
@@ -20,7 +19,7 @@ VoxelGame::~VoxelGame() {
 }
 
 void VoxelGame::run() {
-    while (!glfwWindowShouldClose(getWindow().getHandle())) {
+    while (!glfwWindowShouldClose(getWindow().getHandle()) & !this->app_layers.empty()) {
         double newTime = glfwGetTime();
         double frameTime = newTime - currentTime;
 
@@ -34,14 +33,20 @@ void VoxelGame::run() {
         processInputs();
 
         while (accumulator >= SECONDS_PER_TICK) {
-            tick();
+			for (int i = app_layers.size() - 1; i > 0; i--) {
+				if (!app_layers[i]->tick(this)) {
+					break;
+				}
+			}
             accumulator -= SECONDS_PER_TICK;
         }
 
         double deltaTime = accumulator / SECONDS_PER_TICK;
 
         glfwPollEvents();
-        render(deltaTime);
+		for (int i = 0; i < app_layers.size(); i++) {
+			app_layers[i]->render(this);
+		}
         glfwSwapBuffers(getWindow().getHandle());
     }
 }
@@ -52,13 +57,6 @@ void VoxelGame::processInputs() {
     }
 }
 
-void VoxelGame::tick() {
-    tickCount++;
-}
-
-void VoxelGame::render(float deltaTime) {
-    gameRenderer->renderGame(deltaTime);
-}
 
 void VoxelGame::onResize(int width, int height) const {
     getWindow().resize(width, height);
@@ -66,10 +64,6 @@ void VoxelGame::onResize(int width, int height) const {
 
 Window &VoxelGame::getWindow() const {
     return *window;
-}
-
-GameRenderer &VoxelGame::getGameRenderer() const {
-    return *gameRenderer;
 }
 
 VoxelGame *VoxelGame::getInstance() {

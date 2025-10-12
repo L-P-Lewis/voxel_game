@@ -2,7 +2,6 @@
 add_executable(voxel_core 
 	"./main.cpp" 
 	"./voxel_game.cpp" 
-	"./renderer.cpp"
 	"./window.cpp"
 )
 
