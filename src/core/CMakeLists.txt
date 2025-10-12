@@ -3,6 +3,7 @@ add_executable(voxel_core
 	"./main.cpp" 
 	"./voxel_game.cpp" 
 	"./window.cpp"
+	"./layer/test_layer.cpp"
 )
 
 # Copy assets to output directory on build

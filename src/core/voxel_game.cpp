@@ -1,4 +1,5 @@
 #include "voxel_game.h"
+#include "layer/test_layer.h"
 #include "window.h"
 #include "app_layer.h"
 
@@ -12,6 +13,7 @@ VoxelGame::VoxelGame() {
     this->window = new Window();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
+	this->app_layers.push_back(new TestLayer());
 }
 
 VoxelGame::~VoxelGame() {
