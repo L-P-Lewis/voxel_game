@@ -71,7 +71,7 @@ void VoxelGame::run() {
         processInputs();
 
         while (accumulator >= SECONDS_PER_TICK) {
-			for (int i = app_layers.size() - 1; i > 0; i--) {
+			for (int i = app_layers.size() - 1; i >= 0; i--) {
 				if (!app_layers[i]->tick(this)) {
 					break;
 				}
@@ -82,9 +82,11 @@ void VoxelGame::run() {
         double deltaTime = accumulator / SECONDS_PER_TICK;
 
         glfwPollEvents();
+
 		for (int i = 0; i < app_layers.size(); i++) {
 			app_layers[i]->render(this);
 		}
+
         glfwSwapBuffers(getWindow().getHandle());
     }
 }
