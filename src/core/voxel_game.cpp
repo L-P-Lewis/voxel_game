@@ -4,6 +4,7 @@
 #include "app_layer.h"
 
 #include <GLFW/glfw3.h>
+#include <cstdlib>
 
 
 VoxelGame* VoxelGame::instance = nullptr;
@@ -13,15 +14,50 @@ VoxelGame::VoxelGame() {
     this->window = new Window();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
-	this->app_layers.push_back(new TestLayer());
+	this->pushAppLayer(new TestLayer());
 }
 
 VoxelGame::~VoxelGame() {
     instance = nullptr;
 }
 
+void VoxelGame::pushAppLayer(AppLayer *layer)
+{
+	if (this->layer_operation_count == MAX_APP_LAYER_OPS) {return;}
+	this->layer_operation_queue[this->layer_operation_count++] = {
+		.type = LayerOpp::LAYER_PUSH,
+		.layer = layer
+	};
+}
+
+void VoxelGame::popAppLayer()
+{
+	if (this->layer_operation_count == MAX_APP_LAYER_OPS) {return;}
+	this->layer_operation_queue[this->layer_operation_count++] = {
+		.type = LayerOpp::LAYER_POP
+	};
+}
+
+
 void VoxelGame::run() {
-    while (!glfwWindowShouldClose(getWindow().getHandle()) & !this->app_layers.empty()) {
+    while (!glfwWindowShouldClose(getWindow().getHandle())) {
+
+		for (int i = 0; i < layer_operation_count; i++) {
+			LayerOpp new_op = layer_operation_queue[i];
+			if (new_op.type == LayerOpp::LAYER_POP) {
+				if (app_layers.empty()) continue;
+				AppLayer *old = app_layers.back();
+				app_layers.pop_back();
+				delete old;
+			} else if (new_op.type == LayerOpp::LAYER_PUSH) {
+				app_layers.push_back(new_op.layer);
+			}
+		}
+		layer_operation_count = 0;
+		if (app_layers.empty()) {
+			glfwSetWindowShouldClose(getWindow().getHandle(), true);
+		}
+
         double newTime = glfwGetTime();
         double frameTime = newTime - currentTime;
 
