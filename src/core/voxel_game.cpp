@@ -2,9 +2,9 @@
 #include "layer/test_layer.h"
 #include "window.h"
 #include "app_layer.h"
+#include "app_layer_manager.h"
 
 #include <GLFW/glfw3.h>
-#include <cstdlib>
 
 
 VoxelGame* VoxelGame::instance = nullptr;
@@ -14,6 +14,7 @@ VoxelGame::VoxelGame() {
     this->window = new Window();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
+    this->appLayerManager = new AppLayerManager();
 	this->pushAppLayer(new TestLayer());
 }
 
@@ -21,40 +22,20 @@ VoxelGame::~VoxelGame() {
     instance = nullptr;
 }
 
-void VoxelGame::pushAppLayer(AppLayer *layer)
-{
-	if (this->layer_operation_count == MAX_APP_LAYER_OPS) {return;}
-	this->layer_operation_queue[this->layer_operation_count++] = {
-		.type = LayerOpp::LAYER_PUSH,
-		.layer = layer
-	};
+void VoxelGame::pushAppLayer(AppLayer *layer) const {
+	this->appLayerManager->pushAppLayer(layer);
 }
 
-void VoxelGame::popAppLayer()
-{
-	if (this->layer_operation_count == MAX_APP_LAYER_OPS) {return;}
-	this->layer_operation_queue[this->layer_operation_count++] = {
-		.type = LayerOpp::LAYER_POP
-	};
+void VoxelGame::popAppLayer() const {
+	this->appLayerManager->popAppLayer();
 }
 
 
 void VoxelGame::run() {
     while (!glfwWindowShouldClose(getWindow().getHandle())) {
 
-		for (int i = 0; i < layer_operation_count; i++) {
-			LayerOpp new_op = layer_operation_queue[i];
-			if (new_op.type == LayerOpp::LAYER_POP) {
-				if (app_layers.empty()) continue;
-				AppLayer *old = app_layers.back();
-				app_layers.pop_back();
-				delete old;
-			} else if (new_op.type == LayerOpp::LAYER_PUSH) {
-				app_layers.push_back(new_op.layer);
-			}
-		}
-		layer_operation_count = 0;
-		if (app_layers.empty()) {
+        this->appLayerManager->update();
+		if (this->appLayerManager->isEmpty()) {
 			glfwSetWindowShouldClose(getWindow().getHandle(), true);
 		}
 
@@ -71,11 +52,7 @@ void VoxelGame::run() {
         processInputs();
 
         while (accumulator >= SECONDS_PER_TICK) {
-			for (int i = app_layers.size() - 1; i >= 0; i--) {
-				if (!app_layers[i]->tick(this)) {
-					break;
-				}
-			}
+        	this->appLayerManager->tick(this);
             accumulator -= SECONDS_PER_TICK;
         }
 
@@ -83,9 +60,7 @@ void VoxelGame::run() {
 
         glfwPollEvents();
 
-		for (int i = 0; i < app_layers.size(); i++) {
-			app_layers[i]->render(this);
-		}
+    	this->appLayerManager->render(this, deltaTime);
 
         glfwSwapBuffers(getWindow().getHandle());
     }
@@ -100,6 +75,7 @@ void VoxelGame::processInputs() {
 
 void VoxelGame::onResize(int width, int height) const {
     getWindow().resize(width, height);
+    this->appLayerManager->resize(width, height);
 }
 
 Window &VoxelGame::getWindow() const {

@@ -1,9 +1,10 @@
 # Create core executable
-add_executable(voxel_core 
-	"./main.cpp" 
-	"./voxel_game.cpp" 
-	"./window.cpp"
-	"./layer/test_layer.cpp"
+add_executable(voxel_core
+		"./main.cpp"
+		"./voxel_game.cpp"
+		"./window.cpp"
+		"./app_layer_manager.cpp"
+		"./layer/test_layer.cpp"
 )
 
 # Copy assets to output directory on build

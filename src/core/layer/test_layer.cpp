@@ -9,7 +9,7 @@
 float tick_count = 0.0;
 
 
-void TestLayer::render(VoxelGame *game) {
+void TestLayer::render(VoxelGame *game, float deltaTime) {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glLoadIdentity();
@@ -35,4 +35,8 @@ bool TestLayer::tick(VoxelGame *game) {
 	tick_count += 0.1;
 	std::cout << tick_count << std::endl;
 	return true;
+}
+
+void TestLayer::resize(int width, int height) {
+
 }
