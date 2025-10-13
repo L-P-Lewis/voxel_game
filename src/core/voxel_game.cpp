@@ -6,20 +6,17 @@
 
 #include <GLFW/glfw3.h>
 
-
-VoxelGame* VoxelGame::instance = nullptr;
-
 VoxelGame::VoxelGame() {
-    instance = this;
     this->window = std::make_unique<Window>();
     window->init();
+    glfwSetWindowUserPointer(window->getHandle(), this);
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
     this->appLayerManager = new AppLayerManager();
 	this->pushAppLayer(new TestLayer());
 }
 
 VoxelGame::~VoxelGame() {
-    instance = nullptr;
+    delete appLayerManager;
 }
 
 void VoxelGame::pushAppLayer(AppLayer *layer) const {
@@ -82,11 +79,9 @@ Window &VoxelGame::getWindow() const {
     return *window;
 }
 
-VoxelGame *VoxelGame::getInstance() {
-    return instance;
-}
-
 void VoxelGame::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    getInstance()->onResize(width, height);
+    if (const auto* game = static_cast<VoxelGame*>(glfwGetWindowUserPointer(window))) {
+        game->onResize(width, height);
+    }
 }
 

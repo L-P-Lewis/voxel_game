@@ -9,12 +9,9 @@ class AppLayerManager;
 
 /// Superclass representing the whole game
 class VoxelGame {
-	// Singleton variable
-    static VoxelGame *instance;
     static constexpr float TICKS_PER_SECOND = 20.0;
     static constexpr float SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-	// Window handle
     std::unique_ptr<Window> window;
 	AppLayerManager *appLayerManager;
 
@@ -23,8 +20,8 @@ class VoxelGame {
     long tickCount = 0;
 
 public:
-    VoxelGame();
-    ~VoxelGame();
+	VoxelGame();
+	~VoxelGame();
     void run();
     void processInputs();
     void tick();
@@ -39,6 +36,5 @@ public:
 
     Window& getWindow() const;
 
-    static VoxelGame* getInstance();
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };
