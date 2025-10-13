@@ -26,7 +26,7 @@ public:
     void processInputs();
     void tick();
     void render(float deltaTime);
-    void onResize(int width, int height) const;
+    void onResize(int width, int height);
 	
 	/// Queues up an app layer to be pushed onto the layer stack at the end of the frame
 	/// *layer: The layer to push

@@ -29,9 +29,9 @@ public:
     AppLayerManager();
 
     void update();
-    void tick(VoxelGame *game);
-    void render(VoxelGame *game, float deltaTime);
-    void resize(int width, int height);
+    void tick(VoxelGame &game);
+    void render(VoxelGame &game, float deltaTime);
+    void resize(VoxelGame &game, int width, int height);
 
     /// Queues up an app layer to be pushed onto the layer stack at the end of the frame
     /// *layer: The layer to push

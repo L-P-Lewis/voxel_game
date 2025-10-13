@@ -49,7 +49,7 @@ void VoxelGame::run() {
         processInputs();
 
         while (accumulator >= SECONDS_PER_TICK) {
-        	this->appLayerManager->tick(this);
+        	this->appLayerManager->tick(*this);
             accumulator -= SECONDS_PER_TICK;
         }
 
@@ -57,7 +57,7 @@ void VoxelGame::run() {
 
         glfwPollEvents();
 
-    	this->appLayerManager->render(this, deltaTime);
+    	this->appLayerManager->render(*this, deltaTime);
 
         glfwSwapBuffers(getWindow().getHandle());
     }
@@ -70,9 +70,9 @@ void VoxelGame::processInputs() {
 }
 
 
-void VoxelGame::onResize(int width, int height) const {
+void VoxelGame::onResize(int width, int height) {
     getWindow().resize(width, height);
-    this->appLayerManager->resize(width, height);
+    this->appLayerManager->resize(*this, width, height);
 }
 
 Window &VoxelGame::getWindow() const {
@@ -80,7 +80,7 @@ Window &VoxelGame::getWindow() const {
 }
 
 void VoxelGame::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    if (const auto* game = static_cast<VoxelGame*>(glfwGetWindowUserPointer(window))) {
+    if (auto* game = static_cast<VoxelGame*>(glfwGetWindowUserPointer(window))) {
         game->onResize(width, height);
     }
 }

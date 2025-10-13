@@ -20,4 +20,6 @@ public:
     const char* getTitle() const;
     GLFWwindow* getHandle() const;
 
+    Window(const Window&) = delete;
+    Window& operator=(const Window&) = delete;
 };

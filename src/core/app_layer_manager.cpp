@@ -20,7 +20,7 @@ void AppLayerManager::update() {
 }
 
 
-void AppLayerManager::tick(VoxelGame *game) {
+void AppLayerManager::tick(VoxelGame &game) {
     for (int i = app_layers.size() - 1; i >= 0; i--) {
         if (!app_layers[i]->tick(game)) {
             break;
@@ -28,15 +28,15 @@ void AppLayerManager::tick(VoxelGame *game) {
     }
 }
 
-void AppLayerManager::render(VoxelGame *game, float deltaTime) {
+void AppLayerManager::render(VoxelGame &game, float deltaTime) {
     for (int i = 0; i < app_layers.size(); i++) {
         app_layers[i]->render(game, deltaTime);
     }
 }
 
-void AppLayerManager::resize(int width, int height) {
+void AppLayerManager::resize(VoxelGame &game, int width, int height) {
     for (int i = 0; i < app_layers.size(); i++) {
-        app_layers[i]->resize(width, height);
+        app_layers[i]->resize(game, width, height);
     }
 }
 

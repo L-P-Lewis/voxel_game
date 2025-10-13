@@ -9,9 +9,9 @@
 // Test layer for initial milestone
 class TestLayer : public AppLayer {
 	public:
-		void render(VoxelGame *game, float deltaTime) override;
-		bool tick(VoxelGame *game) override;
-		void resize(int width, int height) override;
+		void render(VoxelGame &game, float deltaTime) override;
+		bool tick(VoxelGame &game) override;
+		void resize(VoxelGame &game, int width, int height) override;
 };
 
 
