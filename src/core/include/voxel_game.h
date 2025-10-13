@@ -37,4 +37,7 @@ public:
     Window& getWindow() const;
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+
+	VoxelGame(const VoxelGame&) = delete;
+	VoxelGame& operator=(const VoxelGame&) = delete;
 };
