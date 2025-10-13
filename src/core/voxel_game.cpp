@@ -11,7 +11,7 @@ VoxelGame* VoxelGame::instance = nullptr;
 
 VoxelGame::VoxelGame() {
     instance = this;
-    this->window = new Window();
+    this->window = std::make_unique<Window>();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
     this->appLayerManager = new AppLayerManager();

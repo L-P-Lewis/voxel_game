@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 
 // Dummy Declarations
 class Window;
@@ -14,7 +15,7 @@ class VoxelGame {
     static constexpr float SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
 	// Window handle
-    Window *window; // We don't need a smart pointer here, all this just gets cleaned up by the OS when we quit the program
+    std::unique_ptr<Window> window;
 	AppLayerManager *appLayerManager;
 
     double accumulator = 0.0;
