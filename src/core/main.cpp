@@ -1,7 +1,8 @@
 #include "voxel_game.h"
 
 int main() {
-	VoxelGame game;
-	game.run();
+	VoxelGame::init();
+	VoxelGame::run();
+	VoxelGame::destroy();
 	return 0;
 }

@@ -12,32 +12,29 @@ class VoxelGame {
     static constexpr float TICKS_PER_SECOND = 20.0;
     static constexpr float SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
-    std::unique_ptr<Window> window;
-	AppLayerManager *appLayerManager;
+    static std::unique_ptr<Window> window;
+	static AppLayerManager *appLayerManager;
 
-    double accumulator = 0.0;
-    double currentTime = 0.0;
-    long tickCount = 0;
+    static double accumulator;
+    static double currentTime;
+    static long tickCount;
 
 public:
-	VoxelGame();
-	~VoxelGame();
-    void run();
-    void processInputs();
-    void tick();
-    void render(float deltaTime);
-    void onResize(int width, int height);
+	static void init();
+	static void destroy();
+    static void run();
+    static void processInputs();
+    static void tick();
+    static void render(float deltaTime);
+    static void onResize(int width, int height);
 	
 	/// Queues up an app layer to be pushed onto the layer stack at the end of the frame
 	/// *layer: The layer to push
-	void pushAppLayer(AppLayer *layer) const;
+	static void pushAppLayer(AppLayer *layer);
 	/// Queues up a pop opperation on the app layer stack at the end of the frame
-	void popAppLayer() const;
+	static void popAppLayer();
 
-    Window& getWindow() const;
+    static Window& getWindow();
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-
-	VoxelGame(const VoxelGame&) = delete;
-	VoxelGame& operator=(const VoxelGame&) = delete;
 };

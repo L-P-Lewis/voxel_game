@@ -6,33 +6,38 @@
 
 #include <GLFW/glfw3.h>
 
-VoxelGame::VoxelGame() {
-    this->window = std::make_unique<Window>();
+std::unique_ptr<Window> VoxelGame::window = nullptr;
+AppLayerManager* VoxelGame::appLayerManager = nullptr;
+double VoxelGame::accumulator = 0.0;
+double VoxelGame::currentTime = 0.0;
+long VoxelGame::tickCount = 0;
+
+void VoxelGame::init() {
+    window = std::make_unique<Window>();
     window->init();
-    glfwSetWindowUserPointer(window->getHandle(), this);
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
-    this->appLayerManager = new AppLayerManager();
-	this->pushAppLayer(new TestLayer());
+    appLayerManager = new AppLayerManager();
+	pushAppLayer(new TestLayer());
 }
 
-VoxelGame::~VoxelGame() {
+void VoxelGame::destroy() {
     delete appLayerManager;
 }
 
-void VoxelGame::pushAppLayer(AppLayer *layer) const {
-	this->appLayerManager->pushAppLayer(layer);
+void VoxelGame::pushAppLayer(AppLayer *layer) {
+	appLayerManager->pushAppLayer(layer);
 }
 
-void VoxelGame::popAppLayer() const {
-	this->appLayerManager->popAppLayer();
+void VoxelGame::popAppLayer() {
+	appLayerManager->popAppLayer();
 }
 
 
 void VoxelGame::run() {
     while (!glfwWindowShouldClose(getWindow().getHandle())) {
 
-        this->appLayerManager->update();
-		if (this->appLayerManager->isEmpty()) {
+        appLayerManager->update();
+		if (appLayerManager->isEmpty()) {
 			glfwSetWindowShouldClose(getWindow().getHandle(), true);
 		}
 
@@ -49,7 +54,7 @@ void VoxelGame::run() {
         processInputs();
 
         while (accumulator >= SECONDS_PER_TICK) {
-        	this->appLayerManager->tick(*this);
+        	appLayerManager->tick();
             accumulator -= SECONDS_PER_TICK;
         }
 
@@ -57,7 +62,7 @@ void VoxelGame::run() {
 
         glfwPollEvents();
 
-    	this->appLayerManager->render(*this, deltaTime);
+    	appLayerManager->render(deltaTime);
 
         glfwSwapBuffers(getWindow().getHandle());
     }
@@ -72,16 +77,14 @@ void VoxelGame::processInputs() {
 
 void VoxelGame::onResize(int width, int height) {
     getWindow().resize(width, height);
-    this->appLayerManager->resize(*this, width, height);
+    appLayerManager->resize(width, height);
 }
 
-Window &VoxelGame::getWindow() const {
+Window &VoxelGame::getWindow() {
     return *window;
 }
 
 void VoxelGame::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
-    if (auto* game = static_cast<VoxelGame*>(glfwGetWindowUserPointer(window))) {
-        game->onResize(width, height);
-    }
+    onResize(width, height);
 }
 
