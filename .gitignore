@@ -5,3 +5,10 @@ compile_commands.json
 cmake-build-debug/**
 
 .idea/**
+
+Makefile
+*.make
+*.cmake
+*.marks
+*.ts
+CMakeFiles/
