@@ -27,7 +27,7 @@ public:
     static void tick();
     static void render(float deltaTime);
     static void onResize(int width, int height);
-	
+
 	/// Queues up an app layer to be pushed onto the layer stack at the end of the frame
 	/// *layer: The layer to push
 	static void pushAppLayer(AppLayer *layer);

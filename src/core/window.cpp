@@ -3,7 +3,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-Window::Window(int width, int height, bool resizeable, const char *title) {
+Window::Window(const int width, const int height, const bool resizeable, const char *title) {
     this->width = width;
     this->height = height;
     this->resizeable = resizeable;
