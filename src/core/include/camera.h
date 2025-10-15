@@ -31,9 +31,12 @@ class Camera {
 		float near;
 		float far;
 		float fov;
+		bool updateView;	//if a field is changed, we need to update the matrix before using it
+		bool updateProjection;
 		ProjectionMode projection_mode;
+
 	public:
-		void setPosition(glm::dvec3 position) {this->position = position;};
+		void setPosition(const glm::dvec3 &position);
 		glm::dvec3 getPosition() const {return this->position;};
 		glm::vec3 getLookVector() const {return this->forwards;};
 		glm::vec3 getUpVector() const {return this->up;};
@@ -44,18 +47,21 @@ class Camera {
 		float getPitch() const {return this->pitch;};
 		void setRoll(float roll);
 		float getRoll() const {return this->pitch;};
-		void setNearPlane(float near) {this->near = near;};
+		void setNearPlane(const float near);
 		float getNearPlane() const {return this->near;};
-		void setFarPlane(float far) {this->far = far;};
+		void setFarPlane(const float far);
 		float getFarPlane() const {return this->far;};
-		void setFov(float fov) {this->fov = fov;};
+		void setFov(const float fov);
 		float getFov() const {return this->fov;};
 		ProjectionMode getProjectionMode() const {return this->projection_mode;}
 		void setPerspective() {this->projection_mode = ProjectionMode::PERSPECTIVE;};
 		void setOrthographic() {this->projection_mode = ProjectionMode::ORTHOGRAPHIC;};
+		glm::mat4 getProjectionMatrix();
 		glm::mat4 getProjectionMatrix() const;
+		glm::mat4 getViewMatrix();
 		glm::mat4 getViewMatrix() const;
+		void recalculateViewMatrix();
+		void recalculateProjectionMatrix();
 };
-
 
 #endif
