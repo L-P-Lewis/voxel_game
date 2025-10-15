@@ -62,7 +62,7 @@ void VoxelGame::run() {
 
         glfwPollEvents();
 
-    	appLayerManager->render(deltaTime);
+    	appLayerManager->render(static_cast<float>(deltaTime));
 
         glfwSwapBuffers(getWindow().getHandle());
     }

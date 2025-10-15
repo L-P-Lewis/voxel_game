@@ -11,14 +11,14 @@ class Window {
     const char* title;
     GLFWwindow* handle{};
 public:
-    Window(int width = 1600, int height = 900, bool resizeable = true, const char* title = "OpenGL Window");
+    explicit Window(int width = 1600, int height = 900, bool resizeable = true, const char* title = "OpenGL Window");
     ~Window();
     void init();
     void resize(int width, int height);
-    int getWidth() const;
-    int getHeight() const;
-    const char* getTitle() const;
-    GLFWwindow* getHandle() const;
+    [[nodiscard]] int getWidth() const;
+    [[nodiscard]] int getHeight() const;
+    [[nodiscard]] const char* getTitle() const;
+    [[nodiscard]] GLFWwindow* getHandle() const;
 
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;

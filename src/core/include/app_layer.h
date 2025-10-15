@@ -9,6 +9,7 @@ class VoxelGame;
 /// Layers handle their own data, and act as a stack
 class AppLayer {
 	public:
+	virtual ~AppLayer() = default;
 	/// Runs the tick update for the current layer. Returns true if "lower" layers should also tick
 	virtual bool tick() {return true;};
 	/// Renders the layer
