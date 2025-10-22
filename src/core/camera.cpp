@@ -1,5 +1,8 @@
 #include "camera.h"
 
+#include "glm/ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_transform.hpp"
+
 
 void Camera::setPosition(const glm::dvec3 &position)
 {
@@ -9,19 +12,19 @@ void Camera::setPosition(const glm::dvec3 &position)
 
 void Camera::setYaw(const float yaw)
 {
-	this->yaw = yaw;
+	this->yaw = glm::radians(yaw);
 	updateView = true;
 }
 
 void Camera::setPitch(const float pitch)
 {
-	this->pitch = pitch;
+	this->pitch = glm::radians(pitch);
 	updateView = true;
 }
 
 void Camera::setRoll(const float roll)
 {
-	this->roll = roll;
+	this->roll = glm::radians(roll);
 	updateView = true;
 }
 
@@ -34,6 +37,12 @@ void Camera::setNearPlane(const float near)
 void Camera::setFarPlane(const float far)
 {
 	this->far = far;
+	updateProjection = true;
+}
+
+void Camera::setAspectRatio(const float aspectRatio)
+{
+	this->aspectRatio = aspectRatio;
 	updateProjection = true;
 }
 
@@ -55,8 +64,8 @@ glm::mat4 Camera::getProjectionMatrix()
 
 glm::mat4 Camera::getProjectionMatrix() const
 {
-	//TODO: Implement
-	assert(false);
+	return projection;
+	// assert(false);
 }
 
 glm::mat4 Camera::getViewMatrix()
@@ -72,18 +81,18 @@ glm::mat4 Camera::getViewMatrix()
 
 glm::mat4 Camera::getViewMatrix() const
 {
-	//TODO: Implement
-	assert(false);
+	return view;
+	// assert(false);
 }
 
 void Camera::recalculateViewMatrix()
 {
-	//TODO: Implement
-	assert(false);
+	view = glm::lookAt(position, position + forwards, up);
+	// assert(false);
 }
 
 void Camera::recalculateProjectionMatrix()
 {
-	//TODO: Implement
-	assert(false);
+	projection = glm::perspective(fov, aspectRatio, near, far);
+	// assert(false);
 }

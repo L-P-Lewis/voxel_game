@@ -22,15 +22,21 @@ enum ProjectionMode {
 class Camera {
 	private:
 		glm::dvec3 position;
-		glm::vec3 forwards;
-		glm::vec3 up;
+		glm::dvec3 forwards;
+		glm::dvec3 up;
 		glm::vec3 left;
+
+		glm::mat4 view;
+		glm::mat4 projection;
+		//stored in radians, but the setter will convert an angle to radians, so everything should be done in degrees
 		float yaw;
 		float pitch;
 		float roll;
+
 		float near;
 		float far;
 		float fov;
+		float aspectRatio;
 		bool updateView;	//if a field is changed, we need to update the matrix before using it
 		bool updateProjection;
 		ProjectionMode projection_mode;
@@ -51,15 +57,17 @@ class Camera {
 		float getNearPlane() const {return this->near;};
 		void setFarPlane(const float far);
 		float getFarPlane() const {return this->far;};
+		void setAspectRatio(const float aspectRatio);
+		float getAspectRatio() const {return this->aspectRatio;};
 		void setFov(const float fov);
-		float getFov() const {return this->fov;};
+		[[nodiscard]] float getFov() const {return this->fov;};
 		ProjectionMode getProjectionMode() const {return this->projection_mode;}
 		void setPerspective() {this->projection_mode = ProjectionMode::PERSPECTIVE;};
 		void setOrthographic() {this->projection_mode = ProjectionMode::ORTHOGRAPHIC;};
 		glm::mat4 getProjectionMatrix();
-		glm::mat4 getProjectionMatrix() const;
+		[[nodiscard]] glm::mat4 getProjectionMatrix() const;
 		glm::mat4 getViewMatrix();
-		glm::mat4 getViewMatrix() const;
+		[[nodiscard]] glm::mat4 getViewMatrix() const;
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
 };
