@@ -2,12 +2,22 @@
 #include "window.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
+#include "voxel_game.h"
 
 Window::Window(const int width, const int height, const bool resizeable, const char *title) {
     this->width = width;
     this->height = height;
     this->resizeable = resizeable;
     this->title = title;
+}
+
+void mouse_callback(GLFWwindow *window, double xpos, double ypos)
+{
+	Window& main_window = VoxelGame::getWindow(); 
+	main_window.accumulated_mouse_x += xpos - main_window.mpos_x;
+	main_window.accumulated_mouse_y += ypos - main_window.mpos_y;
+	main_window.mpos_x = xpos;
+	main_window.mpos_y = ypos;
 }
 
 void Window::init() {
@@ -28,6 +38,10 @@ void Window::init() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return;
     }
+
+	glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
+	glfwSetCursorPosCallback(handle, mouse_callback);
+
     glViewport(0, 0, getWidth(), getHeight());
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 }

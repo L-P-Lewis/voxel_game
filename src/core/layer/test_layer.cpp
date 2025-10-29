@@ -192,15 +192,21 @@ bool TestLayer::tick() {
         camera_pos += cameraSpeed * glm::vec3(0.0, -1.0, 0.0);
 
 
-    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_RIGHT) == GLFW_PRESS)
-		yaw += 1.0;
-    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_LEFT) == GLFW_PRESS)
-		yaw -= 1.0;
+    //if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_RIGHT) == GLFW_PRESS)
+	//	yaw += 1.0;
+   // if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_LEFT) == GLFW_PRESS)
+	//	yaw -= 1.0;
 
-    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_UP) == GLFW_PRESS)
-		pitch += 1.0;
-    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_DOWN) == GLFW_PRESS)
-		pitch -= 1.0;
+  //  if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_UP) == GLFW_PRESS)
+//		pitch += 1.0;
+//    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_DOWN) == GLFW_PRESS)
+		//pitch -= 1.0;
+
+	float mouse_sensitivity = 0.01f;
+
+	pitch -= VoxelGame::getWindow().get_mouse_acc_y();
+	yaw += VoxelGame::getWindow().get_mouse_acc_x();
+	VoxelGame::getWindow().clear_mouse_acc();
 
 	if (pitch > 89.0) pitch = 89.0;
 	if (pitch < -89.0) pitch = -89.0;
