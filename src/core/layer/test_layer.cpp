@@ -112,7 +112,7 @@ TestLayer::TestLayer()
 	glDeleteShader(vertex_shader);
 
 
-	this->camera.setFov(90);
+	this->camera.setFov(45);
 	this->camera.setNearPlane(0.1f);
 	this->camera.setFarPlane(1000.0f);
 	this->camera.setPosition(glm::dvec3(0.0, 0.0, -3.0));
@@ -140,9 +140,10 @@ void TestLayer::render(float deltaTime) {
 	glUniformMatrix4fv(model_loc, 1, GL_FALSE, glm::value_ptr(model_matrix));
 
 	glm::mat4 projection(1.0f);
-	projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	//projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+	projection = this->camera.getProjectionMatrix();
 	int proj_loc = glGetUniformLocation(shader_program, "projection");
-	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(this->camera.getProjectionMatrix()));
+	glUniformMatrix4fv(proj_loc, 1, GL_FALSE, glm::value_ptr(projection));
 
 
 
@@ -202,7 +203,7 @@ bool TestLayer::tick() {
 //    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_DOWN) == GLFW_PRESS)
 		//pitch -= 1.0;
 
-	float mouse_sensitivity = 0.01f;
+	float mouse_sensitivity = 0.001f;
 
 	pitch -= VoxelGame::getWindow().get_mouse_acc_y();
 	yaw += VoxelGame::getWindow().get_mouse_acc_x();
