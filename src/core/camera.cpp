@@ -2,7 +2,18 @@
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/fwd.hpp"
+#include <iostream>
 
+
+Camera::Camera()
+{
+	this->position = glm::dvec3(1.0);
+	this->forwards = glm::dvec3(0.0, 0.0, -1.0);
+	this-> up = glm::dvec3(0.0, 1.0, 0.0);
+	this->updateProjection = true;
+	this->updateView = true;
+}
 
 void Camera::setPosition(const glm::dvec3 &position)
 {
@@ -87,7 +98,13 @@ glm::mat4 Camera::getViewMatrix() const
 
 void Camera::recalculateViewMatrix()
 {
-	view = glm::lookAt(position, position + forwards, up);
+	glm::vec3 direction;
+	direction.x = cos(yaw) * cos(pitch);
+	direction.y = sin(pitch);
+	direction.z = sin(yaw) * cos(pitch);
+	//std::cout << "(" << direction.x << "," << direction.y << "," <<direction.z << ")" << std::endl;
+	forwards = glm::normalize(direction);
+	view = glm::lookAt(position, position + forwards, glm::dvec3(0.0, 1.0, 0.0));
 	// assert(false);
 }
 

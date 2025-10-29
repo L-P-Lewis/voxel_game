@@ -42,6 +42,7 @@ class Camera {
 		ProjectionMode projection_mode;
 
 	public:
+		Camera();
 		void setPosition(const glm::dvec3 &position);
 		glm::dvec3 getPosition() const {return this->position;};
 		glm::vec3 getLookVector() const {return this->forwards;};
