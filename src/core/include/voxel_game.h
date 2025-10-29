@@ -9,7 +9,7 @@ class AppLayerManager;
 
 /// Superclass representing the whole game
 class VoxelGame {
-    static constexpr float TICKS_PER_SECOND = 20.0;
+    static constexpr float TICKS_PER_SECOND = 30.0;
     static constexpr float SECONDS_PER_TICK = 1.0 / TICKS_PER_SECOND;
 
     static std::unique_ptr<Window> window;

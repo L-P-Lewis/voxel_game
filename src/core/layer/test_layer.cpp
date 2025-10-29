@@ -1,15 +1,18 @@
 #include "layer/test_layer.h"
-#include "app_layer.h"
 #include "glm/ext/matrix_transform.hpp"
+#include "glm/fwd.hpp"
 #include "voxel_game.h"
-//#include <GL/glext.h>
+#include "window.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 float tick_count = 0.0;
+
+glm::vec3 camera_pos;
+float pitch;
+float yaw;
 
 const int vert_count = 36;
 const float vertices[] = {
@@ -170,6 +173,41 @@ void TestLayer::render(float deltaTime) {
 
 bool TestLayer::tick() {
 	tick_count += 0.1;
+
+	const float cameraSpeed = 0.05f; // adjust accordingly
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_W) == GLFW_PRESS)
+        camera_pos += cameraSpeed * camera.getLookVector();
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_S) == GLFW_PRESS)
+        camera_pos -= cameraSpeed * camera.getLookVector();
+
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_A) == GLFW_PRESS)
+        camera_pos -= glm::normalize(glm::cross(camera.getLookVector(), camera.getUpVector())) * cameraSpeed;
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_D) == GLFW_PRESS)
+        camera_pos += glm::normalize(glm::cross(camera.getLookVector(), camera.getUpVector())) * cameraSpeed;
+
+
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_SPACE) == GLFW_PRESS)
+        camera_pos += cameraSpeed * glm::vec3(0.0, 1.0, 0.0);
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        camera_pos += cameraSpeed * glm::vec3(0.0, -1.0, 0.0);
+
+
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_RIGHT) == GLFW_PRESS)
+		yaw += 1.0;
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_LEFT) == GLFW_PRESS)
+		yaw -= 1.0;
+
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_UP) == GLFW_PRESS)
+		pitch += 1.0;
+    if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_DOWN) == GLFW_PRESS)
+		pitch -= 1.0;
+
+	if (pitch > 89.0) pitch = 89.0;
+	if (pitch < -89.0) pitch = -89.0;
+
+	camera.setPosition(camera_pos);
+	camera.setYaw(yaw);
+	camera.setPitch(pitch);
 	return true;
 }
 
