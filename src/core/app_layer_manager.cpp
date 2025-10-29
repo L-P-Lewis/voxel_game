@@ -1,4 +1,5 @@
 #include "include/app_layer_manager.h"
+#include "GLFW/glfw3.h"
 
 AppLayerManager::AppLayerManager(): layer_operation_queue{} {
     this->layer_operation_count = 0;
