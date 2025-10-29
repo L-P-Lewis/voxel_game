@@ -218,5 +218,6 @@ bool TestLayer::tick() {
 }
 
 void TestLayer::resize(int width, int height) {
+	camera.setAspectRatio((float)width / (float)height);
 
 }
