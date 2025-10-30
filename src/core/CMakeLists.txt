@@ -20,8 +20,7 @@ target_include_directories(voxel_core
 )
 
 
-find_package(OpenGL)
 
 
 # Link libs
-target_link_libraries(voxel_core PRIVATE glad glfw glm::glm OpenGL::GLU)
+target_link_libraries(voxel_core PRIVATE glad glfw glm::glm)

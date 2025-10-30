@@ -10,7 +10,7 @@
 
 float tick_count = 0.0;
 
-glm::vec3 camera_pos;
+glm::vec3 camera_pos = glm::vec3(-3, 0, 0);
 float pitch;
 float yaw;
 

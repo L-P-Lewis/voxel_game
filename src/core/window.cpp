@@ -4,6 +4,8 @@
 #include "GLFW/glfw3.h"
 #include "voxel_game.h"
 
+bool first_mouse = true;
+
 Window::Window(const int width, const int height, const bool resizeable, const char *title) {
     this->width = width;
     this->height = height;
@@ -14,10 +16,17 @@ Window::Window(const int width, const int height, const bool resizeable, const c
 void mouse_callback(GLFWwindow *window, double xpos, double ypos)
 {
 	Window& main_window = VoxelGame::getWindow(); 
+
+	if (first_mouse) {
+		first_mouse = false;
+		main_window.mpos_x = xpos;
+		main_window.mpos_y = ypos;
+	} else {
 	main_window.accumulated_mouse_x += xpos - main_window.mpos_x;
 	main_window.accumulated_mouse_y += ypos - main_window.mpos_y;
 	main_window.mpos_x = xpos;
 	main_window.mpos_y = ypos;
+	}
 }
 
 void Window::init() {
