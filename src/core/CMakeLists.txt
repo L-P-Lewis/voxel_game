@@ -6,6 +6,7 @@ add_executable(voxel_core
  "./app_layer_manager.cpp"
  "./layer/test_layer.cpp"
  "./camera.cpp"
+ "./assets/shader.cpp"
 )
 
 # Copy assets to output directory on build
