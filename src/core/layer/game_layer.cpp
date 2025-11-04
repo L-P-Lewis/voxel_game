@@ -17,29 +17,9 @@ Chunk chunk;
 glm::vec3 camera_pos = glm::vec3(-3, 0, 0);
 float pitch;
 float yaw;
-std::string vertex_shader_source = "#version 330 core\n"
-    "layout (location = 0) in vec3 position;\n"
-    "layout (location = 1) in vec3 normal;\n"
-    "layout (location = 2) in vec2 uv;\n"
-	"uniform mat4 model;\n"
-	"uniform mat4 view;\n"
-	"uniform mat4 projection;\n"
-	"out vec3 vColor;\n"
-    "void main()\n"
-    "{\n"
-    "   gl_Position = projection * view * model * vec4(position, 1.0);\n"
-	"	vColor = vec3(uv, 0);\n"
-    "}\0";
 
-std::string fragment_shader_source = "#version 330 core\n"
-	"in vec3 vColor;\n"
-	"out vec4 FragColor;\n"
-	"void main()\n"
-	"{\n"
-	"FragColor = vec4(vColor, 1.0f);\n"
-	"}";
 
-Shader *shader;
+Shader shader("", "");
 
 GameLayer::GameLayer()
 {
@@ -57,7 +37,7 @@ GameLayer::GameLayer()
 
 	chunk.RegnerateMesh(&this->registry);
 
-	shader = new Shader(vertex_shader_source, fragment_shader_source);
+	shader = VoxelGame::getAssetManager().GetShader("chunk_shader");
 
 	this->camera.setFov(45);
 	this->camera.setNearPlane(0.1f);
@@ -85,12 +65,12 @@ void GameLayer::render(float deltaTime)
 	view = this->camera.getViewMatrix();
 
 
-	shader->set_uniform("projection", projection);
-	shader->set_uniform("view", view);
+	shader.set_uniform("projection", projection);
+	shader.set_uniform("view", view);
 
 
-	shader->set_uniform("model", chunk.GetChunkTransform());
-	chunk.Draw(*shader);
+	shader.set_uniform("model", chunk.GetChunkTransform());
+	chunk.Draw(shader);
 }
 
 bool GameLayer::tick() 

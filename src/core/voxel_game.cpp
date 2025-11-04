@@ -1,13 +1,16 @@
 #include "voxel_game.h"
+#include "assets/assets.h"
 #include "layer/game_layer.h"
 #include "window.h"
 #include "app_layer.h"
 #include "app_layer_manager.h"
 
 #include <GLFW/glfw3.h>
+#include <filesystem>
 
 std::unique_ptr<Window> VoxelGame::window = nullptr;
 AppLayerManager* VoxelGame::appLayerManager = nullptr;
+AssetManager* VoxelGame::asset_manager = nullptr;
 double VoxelGame::accumulator = 0.0;
 double VoxelGame::currentTime = 0.0;
 long VoxelGame::tickCount = 0;
@@ -16,6 +19,7 @@ void VoxelGame::init() {
     window = std::make_unique<Window>();
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
+	asset_manager = new AssetManager(std::filesystem::current_path() / "assets");
     appLayerManager = new AppLayerManager();
 	pushAppLayer(new GameLayer());
 }
@@ -82,6 +86,11 @@ void VoxelGame::onResize(const int width, const int height) {
 
 Window &VoxelGame::getWindow() {
     return *window;
+}
+
+AssetManager &VoxelGame::getAssetManager()
+{
+	return *asset_manager;
 }
 
 void VoxelGame::framebuffer_size_callback(GLFWwindow *window, const int width, const int height) {

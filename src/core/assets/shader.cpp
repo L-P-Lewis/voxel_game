@@ -8,6 +8,8 @@
 
 Shader::Shader(std::string vertex, std::string fragment)
 {
+	if (vertex.empty() || fragment.empty()) {return;}
+
 	const char *raw_vertex, *raw_fragment;
 	unsigned int vert_shader, frag_shader;
 	int success;

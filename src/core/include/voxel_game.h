@@ -1,4 +1,5 @@
 #pragma once
+#include "assets/assets.h"
 #include <memory>
 
 // Dummy Declarations
@@ -14,6 +15,7 @@ class VoxelGame {
 
     static std::unique_ptr<Window> window;
 	static AppLayerManager *appLayerManager;
+	static AssetManager *asset_manager;
 
     static double accumulator;
     static double currentTime;
@@ -35,6 +37,7 @@ public:
 	static void popAppLayer();
 
     static Window& getWindow();
+	static AssetManager& getAssetManager();
 
 	static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };
