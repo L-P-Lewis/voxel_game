@@ -17,8 +17,8 @@ add_executable(voxel_core
 # Copy assets to output directory on build
 add_custom_command(
         TARGET voxel_core POST_BUILD
-        COMMAND ${CMAKE_COMMAND} -E copy
-                ${CMAKE_SOURCE_DIR}/assets/*
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+                ${CMAKE_SOURCE_DIR}/assets
                 ${CMAKE_CURRENT_BINARY_DIR}/assets/)
 
 # Setup include dir
