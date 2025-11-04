@@ -56,7 +56,6 @@ void Chunk::Fill(BlockHandle handle)
 
 void GenerateFace(glm::vec3 dl, glm::vec3 ul, glm::vec3 dr, glm::vec3 ur, int texture, unsigned int &index, std::vector<ChunkVertex> &vertices, std::vector<unsigned int> &indices)
 {
-	
 	int dtx = texture % 8;
 	int dty = texture / 8;
 	glm::vec2 down_uv(0, 0);

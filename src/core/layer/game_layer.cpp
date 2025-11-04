@@ -45,7 +45,16 @@ GameLayer::GameLayer()
 {
 	this->registry.RegisterBlock("air", Block::AllSides(0));
 	this->registry.RegisterBlock("stone", Block::AllSides(1));
-	chunk.Fill(1);
+	chunk.Fill(0);
+
+	for (int x = 0; x < 16; x++) {
+		for (int z = 0; z < 16; z++) {
+			for (int y = 0; y < (x + z) % 16; y++) {
+				chunk.SetBlock(x, y, z, 1);
+			}
+		}
+	}
+
 	chunk.RegnerateMesh(&this->registry);
 
 	shader = new Shader(vertex_shader_source, fragment_shader_source);

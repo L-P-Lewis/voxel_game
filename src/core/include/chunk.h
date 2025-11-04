@@ -43,4 +43,17 @@ class Chunk {
 		void RegnerateMesh(BlockRegistry *block_registry);
 		void Draw(Shader &shader);
 		glm::mat4 GetChunkTransform() const;
+		BlockHandle GetBlock(int x, int y, int z) {
+			if (x >= CHUNK_SIZE || y >= CHUNK_SIZE || z >= CHUNK_SIZE) {
+				return 0;
+			}
+			return blocks[x][y][z];
+		}
+		void SetBlock(int x, int y, int z, BlockHandle target) {
+			if (x >= CHUNK_SIZE || y >= CHUNK_SIZE || z >= CHUNK_SIZE) {
+				return;
+			}
+			blocks[x][y][z] = target;
+		}
+
 };
