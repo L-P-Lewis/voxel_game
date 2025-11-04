@@ -54,6 +54,33 @@ void Chunk::Fill(BlockHandle handle)
 }
 
 
+void GenerateFace(glm::vec3 dl, glm::vec3 ul, glm::vec3 dr, glm::vec3 ur, int texture, unsigned int &index, std::vector<ChunkVertex> &vertices, std::vector<unsigned int> &indices)
+{
+	
+	int dtx = texture % 8;
+	int dty = texture / 8;
+	glm::vec2 down_uv(0, 0);
+	glm::vec3 down_normal = glm::vec3(0, -1, 0);
+
+	vertices.push_back(ChunkVertex(dl, down_normal, glm::vec2(0.0, 0.0)));
+	unsigned int down_1 = index++;
+	vertices.push_back(ChunkVertex(ul, down_normal, glm::vec2(0.0, 1.0))); 
+	unsigned int down_2 = index++;
+	vertices.push_back(ChunkVertex(dr, down_normal, glm::vec2(1.0, 0.0)));
+	unsigned int down_3 = index++;
+	vertices.push_back(ChunkVertex(ur, down_normal, glm::vec2(1.0, 1.0)));
+	unsigned int down_4 = index++;
+
+	indices.push_back(down_1);
+	indices.push_back(down_2);
+	indices.push_back(down_3);
+
+	indices.push_back(down_2);
+	indices.push_back(down_4);
+	indices.push_back(down_3);
+}
+
+
 void Chunk::RegnerateMesh(BlockRegistry *block_registry)
 {
 	if (this->mesh != nullptr) {
@@ -69,35 +96,41 @@ void Chunk::RegnerateMesh(BlockRegistry *block_registry)
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
+				if (blocks[x][y][z] == 0) continue;
 				Block block = block_registry->GetBlock(blocks[x][y][z]);
+
 				glm::vec3 dsw(x, y, z);
 				glm::vec3 dnw(x, y, z + 1);
 				glm::vec3 dse(x + 1, y, z);
 				glm::vec3 dne(x + 1, y, z + 1);
+				glm::vec3 usw(x, y + 1, z);
+				glm::vec3 unw(x, y + 1, z + 1);
+				glm::vec3 use(x + 1, y + 1, z);
+				glm::vec3 une(x + 1, y + 1, z + 1);
 
-				
-				int dtx = block.down_texture % 8;
-				int dty = block.down_texture / 8;
-				glm::vec2 down_uv(0, 0);
-				glm::vec3 down_normal = glm::vec3(0, -1, 0);
+				// UD Faces (Y Axis)
+				if (y == CHUNK_SIZE - 1 || blocks[x][y + 1][z] == 0) {
+					GenerateFace(usw, unw, use, une, block.up_texture, index, vertices, indices); 
+				}
+				if (y == 0 || blocks[x][y - 1][z] == 0) {
+					GenerateFace(dsw, dnw, dse, dne, block.down_texture, index, vertices, indices);
+				}
 
-				vertices.push_back(ChunkVertex(dsw, down_normal, glm::vec2(0.0, 0.0)));
-				unsigned int down_1 = index++;
-				vertices.push_back(ChunkVertex(dnw, down_normal, glm::vec2(0.0, 1.0))); 
-				unsigned int down_2 = index++;
-				vertices.push_back(ChunkVertex(dse, down_normal, glm::vec2(1.0, 0.0)));
-				unsigned int down_3 = index++;
-				vertices.push_back(ChunkVertex(dne, down_normal, glm::vec2(1.0, 1.0)));
-				unsigned int down_4 = index++;
+				// NS Faces (Z Axis)
+				if (z == CHUNK_SIZE - 1 || blocks[x][y][z + 1] == 0) {
+					GenerateFace(dnw, unw, dne, une, block.north_texture, index, vertices, indices);
+				}
+				if (z == 0 || blocks[x][y][z - 1] == 0) {
+					GenerateFace(dsw, usw, dse, use, block.south_texture, index, vertices, indices);
+				}
 
-				indices.push_back(down_1);
-				indices.push_back(down_2);
-				indices.push_back(down_3);
-
-				indices.push_back(down_2);
-				indices.push_back(down_4);
-				indices.push_back(down_3);
-
+				// EW Faces (X Axis)
+				if (x == CHUNK_SIZE - 1 || blocks[x+1][y][z] == 0) {
+					GenerateFace(dne, une, dse, use, block.west_texture, index, vertices, indices);
+				}
+				if (x == 0  || blocks[x-1][y][z] == 0) {
+					GenerateFace(dnw, unw, dsw, usw, block.west_texture, index, vertices, indices);
+				}
 
 				
 			}
