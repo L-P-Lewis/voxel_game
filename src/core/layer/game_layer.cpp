@@ -1,8 +1,10 @@
 #include "layer/game_layer.h"
 #include "assets/texture.h"
+#include "camera.h"
 #include "chunk.h"
 
 #include "assets/shader.h"
+#include "game_world.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/fwd.hpp"
 #include "voxel_game.h"
@@ -20,76 +22,60 @@ float pitch;
 float yaw;
 
 
-Shader shader("", "");
-Texture terrain;
 
-GameLayer::GameLayer()
+GameLayer GameLayer::New()
 {
-	this->registry.RegisterBlock("air", Block::AllSides(0));
-	this->registry.RegisterBlock("stone", Block::AllSides(1));
-	chunk.Fill(0);
+	BlockRegistry registry;
+	Camera camera;
+	Texture terrain;
 
-	chunk.SetBlock(0, 0, 0, 1);
-	for (int x = 0; x < 16; x++) {
-		for (int z = 0; z < 16; z++) {
-			for (int y = 0; y < (x + z) % 16; y++) {
-				chunk.SetBlock(x, y, z, 1);
-			}
-		}
-	}
+	registry.RegisterBlock("air", Block::AllSides(0));
+	registry.RegisterBlock("stone", Block::AllSides(1));
 
-	chunk.RegnerateMesh(&this->registry);
 
-	shader = VoxelGame::getAssetManager().GetShader("chunk_shader");
+	Shader shader = VoxelGame::getAssetManager().GetShader("chunk_shader");
 	terrain = VoxelGame::getAssetManager().GetTexture("terrain");
 
-	this->camera.setFov(45);
-	this->camera.setNearPlane(0.1f);
-	this->camera.setFarPlane(1000.0f);
-	this->camera.setPosition(glm::dvec3(0.0, 0.0, -3.0));
-	this->camera.setYaw(90);
-	this->camera.setRoll(0);
-	this->camera.setPitch(0);
-	this->camera.setPerspective();
-	this->camera.setAspectRatio(1.0);
-	this->camera.recalculateProjectionMatrix();
-	this->camera.recalculateViewMatrix();
+	camera.setFov(45);
+	camera.setNearPlane(0.1f);
+	camera.setFarPlane(1000.0f);
+	camera.setPosition(glm::dvec3(0.0, 0.0, -3.0));
+	camera.setYaw(90);
+	camera.setRoll(0);
+	camera.setPitch(0);
+	camera.setPerspective();
+	camera.setAspectRatio(1.0);
+	camera.recalculateProjectionMatrix();
+	camera.recalculateViewMatrix();
+
+	GameWorld world = GameWorld::New();
+
+	return GameLayer(M{
+		.camera = camera,
+		.registry = registry,
+		.terrain = terrain,
+		.chunk_shader = shader,
+		.world = world
+	});
 }
 
 void GameLayer::render(float deltaTime) 
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	glm::mat4 model_matrix( 1.0 );
-	glm::mat4 projection(1.0f);
-	projection = this->camera.getProjectionMatrix();
-	glm::mat4 view(1.0f);
-	view = this->camera.getViewMatrix();
-
-
-	shader.set_uniform("projection", projection);
-	shader.set_uniform("view", view);
-
-
-	shader.set_uniform("model", chunk.GetChunkTransform());
-	terrain.Use();
-	chunk.Draw(shader);
+	m.world.Draw(m.camera, m.chunk_shader, m.terrain);
 }
 
 bool GameLayer::tick() 
 {
 	const float cameraSpeed = 0.05f; // adjust accordingly
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_W) == GLFW_PRESS)
-        camera_pos += cameraSpeed * camera.getLookVector();
+        camera_pos += cameraSpeed * m.camera.getLookVector();
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_S) == GLFW_PRESS)
-        camera_pos -= cameraSpeed * camera.getLookVector();
+        camera_pos -= cameraSpeed * m.camera.getLookVector();
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_A) == GLFW_PRESS)
-        camera_pos -= glm::normalize(glm::cross(camera.getLookVector(), camera.getUpVector())) * cameraSpeed;
+        camera_pos -= glm::normalize(glm::cross(m.camera.getLookVector(), m.camera.getUpVector())) * cameraSpeed;
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_D) == GLFW_PRESS)
-        camera_pos += glm::normalize(glm::cross(camera.getLookVector(), camera.getUpVector())) * cameraSpeed;
+        camera_pos += glm::normalize(glm::cross(m.camera.getLookVector(), m.camera.getUpVector())) * cameraSpeed;
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_SPACE) == GLFW_PRESS)
         camera_pos += cameraSpeed * glm::vec3(0.0, 1.0, 0.0);
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
@@ -104,13 +90,13 @@ bool GameLayer::tick()
 	if (pitch > 89.0) pitch = 89.0;
 	if (pitch < -89.0) pitch = -89.0;
 
-	camera.setPosition(camera_pos);
-	camera.setYaw(yaw);
-	camera.setPitch(pitch);
+	m.camera.setPosition(camera_pos);
+	m.camera.setYaw(yaw);
+	m.camera.setPitch(pitch);
 	return true;
 }
 
 void GameLayer::resize(int width, int height) 
 {
-	camera.setAspectRatio((float)width / (float)height);
+	m.camera.setAspectRatio((float)width / (float)height);
 }

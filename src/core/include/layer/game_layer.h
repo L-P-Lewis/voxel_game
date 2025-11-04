@@ -1,5 +1,8 @@
 #pragma once
+#include "assets/shader.h"
+#include "assets/texture.h"
 #include "block.h"
+#include "game_world.h"
 #ifndef VOXEL_CORE_LAYER_TEST_LAYER_H_
 #define VOXEL_CORE_LAYER_TEST_LAYER_H_
 
@@ -12,10 +15,16 @@
 // Test layer for initial milestone
 class GameLayer : public AppLayer {
 	private:
-		Camera camera;
-		BlockRegistry registry;
+		struct M {
+			Camera camera;
+			BlockRegistry registry;
+			Texture terrain;
+			Shader chunk_shader;
+			GameWorld world;
+		} m;
+		explicit GameLayer(M m) : m(std::move(m)) {};
 	public:
-		GameLayer();
+		static GameLayer New();
 		void render(float deltaTime) override;
 		bool tick() override;
 		void resize(int width, int height) override;
