@@ -1,4 +1,5 @@
 #include "layer/game_layer.h"
+#include "assets/texture.h"
 #include "chunk.h"
 
 #include "assets/shader.h"
@@ -20,6 +21,7 @@ float yaw;
 
 
 Shader shader("", "");
+Texture terrain;
 
 GameLayer::GameLayer()
 {
@@ -38,6 +40,7 @@ GameLayer::GameLayer()
 	chunk.RegnerateMesh(&this->registry);
 
 	shader = VoxelGame::getAssetManager().GetShader("chunk_shader");
+	terrain = VoxelGame::getAssetManager().GetTexture("terrain");
 
 	this->camera.setFov(45);
 	this->camera.setNearPlane(0.1f);
@@ -70,6 +73,7 @@ void GameLayer::render(float deltaTime)
 
 
 	shader.set_uniform("model", chunk.GetChunkTransform());
+	terrain.Use();
 	chunk.Draw(shader);
 }
 

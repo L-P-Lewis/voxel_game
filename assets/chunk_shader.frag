@@ -1,8 +1,13 @@
 
 #version 330 core
-in vec3 vColor;
+
+uniform sampler2D albedo;
+
+in vec2 vTexCord;
+
 out vec4 FragColor;
+
 void main()
 {
-    FragColor = vec4(vColor, 1.0f);
+    FragColor = texture(albedo, vTexCord);
 }

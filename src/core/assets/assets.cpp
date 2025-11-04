@@ -1,5 +1,6 @@
 #include "assets/assets.h"
 #include "assets/shader.h"
+#include "assets/texture.h"
 #include <fstream>
 #include <iostream>
 
@@ -38,4 +39,19 @@ Shader AssetManager::GetShader(std::string shader_id)
 		return Shader("", "");
     }
 	return Shader(vertexCode, fragmentCode);
+}
+
+
+Texture AssetManager::GetTexture(std::string texture_id)
+{
+	std::string texture_file = texture_id + ".png";
+	std::ifstream tex_file;
+    tex_file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
+	try {
+		tex_file.open(this->base_path / texture_file);
+		return Texture(this->base_path / texture_file);
+	} 
+	catch (std::ifstream::failure e) {
+		return Texture();
+	}
 }

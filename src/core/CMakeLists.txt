@@ -8,6 +8,7 @@ add_executable(voxel_core
  "./camera.cpp"
  "./assets/shader.cpp"
  "./assets/assets.cpp"
+ "./assets/texture.cpp"
  "./block.cpp"
  "./chunk.cpp"
 )
