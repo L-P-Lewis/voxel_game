@@ -45,11 +45,8 @@ Shader AssetManager::GetShader(std::string shader_id)
 Texture AssetManager::GetTexture(std::string texture_id)
 {
 	std::string texture_file = texture_id + ".png";
-	std::ifstream tex_file;
-    tex_file.exceptions (std::ifstream::failbit | std::ifstream::badbit);
 	try {
-		tex_file.open(this->base_path / texture_file);
-		return Texture(this->base_path / texture_file);
+		return Texture((this->base_path / texture_file).string());
 	} 
 	catch (std::ifstream::failure e) {
 		return Texture();
