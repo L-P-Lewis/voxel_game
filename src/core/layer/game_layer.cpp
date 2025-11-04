@@ -29,6 +29,7 @@ GameLayer::GameLayer()
 	this->registry.RegisterBlock("stone", Block::AllSides(1));
 	chunk.Fill(0);
 
+	chunk.SetBlock(0, 0, 0, 1);
 	for (int x = 0; x < 16; x++) {
 		for (int z = 0; z < 16; z++) {
 			for (int y = 0; y < (x + z) % 16; y++) {
@@ -59,6 +60,7 @@ void GameLayer::render(float deltaTime)
 {
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 model_matrix( 1.0 );
