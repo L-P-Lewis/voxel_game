@@ -21,7 +21,7 @@ Block BlockRegistry::GetBlock(BlockHandle handle) const
 
 
 Block Block::AllSides(uint8_t tex) {
-	return (Block){
+	return {
 		tex, tex, tex, tex, tex, tex
 	};
 }
