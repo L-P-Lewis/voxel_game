@@ -1,5 +1,5 @@
 #include "voxel_game.h"
-#include "layer/test_layer.h"
+#include "layer/game_layer.h"
 #include "window.h"
 #include "app_layer.h"
 #include "app_layer_manager.h"
@@ -17,7 +17,7 @@ void VoxelGame::init() {
     window->init();
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
     appLayerManager = new AppLayerManager();
-	pushAppLayer(new TestLayer());
+	pushAppLayer(new GameLayer());
 }
 
 void VoxelGame::destroy() {

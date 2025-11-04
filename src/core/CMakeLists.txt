@@ -5,6 +5,7 @@ add_executable(voxel_core
  "./window.cpp"
  "./app_layer_manager.cpp"
  "./layer/test_layer.cpp"
+ "./layer/game_layer.cpp"
  "./camera.cpp"
  "./assets/shader.cpp"
 )
