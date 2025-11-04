@@ -1,4 +1,5 @@
 #pragma once
+#include "block.h"
 #ifndef VOXEL_CORE_LAYER_TEST_LAYER_H_
 #define VOXEL_CORE_LAYER_TEST_LAYER_H_
 
@@ -12,6 +13,7 @@
 class GameLayer : public AppLayer {
 	private:
 		Camera camera;
+		BlockRegistry registry;
 	public:
 		GameLayer();
 		void render(float deltaTime) override;
