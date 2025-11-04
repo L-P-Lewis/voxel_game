@@ -28,7 +28,7 @@ std::string vertex_shader_source = "#version 330 core\n"
     "void main()\n"
     "{\n"
     "   gl_Position = projection * view * model * vec4(position, 1.0);\n"
-	"	vColor = normal;\n"
+	"	vColor = vec3(uv, 0);\n"
     "}\0";
 
 std::string fragment_shader_source = "#version 330 core\n"
@@ -46,6 +46,7 @@ GameLayer::GameLayer()
 	this->registry.RegisterBlock("air", Block::AllSides(0));
 	this->registry.RegisterBlock("stone", Block::AllSides(1));
 	chunk.Fill(1);
+	chunk.RegnerateMesh(&this->registry);
 
 	shader = new Shader(vertex_shader_source, fragment_shader_source);
 
@@ -75,11 +76,11 @@ void GameLayer::render(float deltaTime)
 	view = this->camera.getViewMatrix();
 
 
-	shader->set_uniform("model", model_matrix);
 	shader->set_uniform("projection", projection);
 	shader->set_uniform("view", view);
 
 
+	shader->set_uniform("model", chunk.GetChunkTransform());
 	chunk.Draw(*shader);
 }
 

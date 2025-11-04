@@ -3,6 +3,7 @@
 
 #include "assets/shader.h"
 #include "block.h"
+#include "glm/fwd.hpp"
 #include "glm/glm.hpp"
 #include <vector>
 
@@ -14,6 +15,7 @@ struct ChunkVertex {
 	glm::vec3 position;
 	glm::vec3 normal;
 	glm::vec2 uv;
+	ChunkVertex(glm::vec3 p, glm::vec3 n, glm::vec2 u) : position(p), normal(n), uv(u) {};
 };
 
 
@@ -38,6 +40,7 @@ class Chunk {
 		ChunkMesh *mesh;
 	public:
 		void Fill(BlockHandle handle);
-		void RegnerateMesh();
+		void RegnerateMesh(BlockRegistry *block_registry);
 		void Draw(Shader &shader);
+		glm::mat4 GetChunkTransform() const;
 };
