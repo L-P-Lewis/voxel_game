@@ -34,9 +34,10 @@ class ChunkMesh {
 class Chunk {
 	private:
 		BlockHandle blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
+		int chunk_x, chunk_y, chunk_z;
 		ChunkMesh *mesh;
 	public:
 		void Fill(BlockHandle handle);
 		void RegnerateMesh();
-		void Draw();
+		void Draw(Shader &shader);
 };

@@ -1,5 +1,8 @@
 #include "chunk.h"
+#include "block.h"
 #include "glad/glad.h"
+#include "glm/fwd.hpp"
+#include <vector>
 
 
 void ChunkMesh::SetupMesh() {
@@ -37,5 +40,60 @@ void ChunkMesh::Draw(Shader &shader)
 }
 
 
+void Chunk::Fill(BlockHandle handle)
+{
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			for (int z = 0; z < CHUNK_SIZE; z++) {
+				this->blocks[x][y][z] = handle;
+			}
+		}
+	}
+	this->RegnerateMesh();
+}
 
 
+void Chunk::RegnerateMesh()
+{
+	if (this->mesh != nullptr) {
+		delete this->mesh;
+	}
+
+	std::vector<ChunkVertex> vertices;
+	std::vector<unsigned int> indices;
+	
+	unsigned int index = 0;
+	for (int x = 0; x < CHUNK_SIZE; x++) {
+		for (int y = 0; y < CHUNK_SIZE; y++) {
+			for (int z = 0; z < CHUNK_SIZE; z++) {
+				// Test function, just generate a single triangle
+				glm::vec3 base(x, y, z);
+				glm::vec3 up(0.0, 1.0, 0.0);
+				glm::vec2 uv(0.0, 0.0);
+
+				ChunkVertex v1 = (ChunkVertex){
+					base, up, uv
+				};
+				ChunkVertex v2 = (ChunkVertex){
+					base + glm::vec3(1.0, 0.0, 0.0), up, uv
+				};
+				ChunkVertex v3 = (ChunkVertex){
+					base + glm::vec3(0.0, 0.0, 1.0), up, uv
+				};
+				vertices.push_back(v1);
+				vertices.push_back(v2);
+				vertices.push_back(v3);
+				indices.push_back(index++);
+				indices.push_back(index++);
+				indices.push_back(index++);
+			}
+		}
+	}
+
+	this->mesh = new ChunkMesh(vertices, indices);
+}
+
+void Chunk::Draw(Shader &shader)
+{
+	if (mesh != nullptr) mesh->Draw(shader);
+}
