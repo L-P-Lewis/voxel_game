@@ -17,7 +17,7 @@
 
 Chunk chunk;
 
-glm::vec3 camera_pos = glm::vec3(-3, 0, 0);
+glm::vec3 camera_pos = glm::vec3(1, 1, 1);
 float pitch;
 float yaw;
 
@@ -39,7 +39,7 @@ GameLayer* GameLayer::New()
 	camera.setFov(45);
 	camera.setNearPlane(0.1f);
 	camera.setFarPlane(1000.0f);
-	camera.setPosition(glm::dvec3(0.0, 0.0, -3.0));
+	camera.setPosition(glm::dvec3(1.0, 1.0, 1.0));
 	camera.setYaw(90);
 	camera.setRoll(0);
 	camera.setPitch(0);
@@ -67,7 +67,7 @@ void GameLayer::render(float deltaTime)
 
 bool GameLayer::tick() 
 {
-	const float cameraSpeed = 0.05f; // adjust accordingly
+	const float cameraSpeed = 0.8f; // adjust accordingly
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_W) == GLFW_PRESS)
         camera_pos += cameraSpeed * m.camera.getLookVector();
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_S) == GLFW_PRESS)
@@ -93,7 +93,7 @@ bool GameLayer::tick()
 	m.camera.setPosition(camera_pos);
 	m.camera.setYaw(yaw);
 	m.camera.setPitch(pitch);
-	m.world.UpdateActiveChunks(WorldPosition(0, 0, 0), &m.registry);
+	m.world.UpdateActiveChunks(WorldPosition(camera_pos.x, camera_pos.y, camera_pos.z), &m.registry);
 	return true;
 }
 

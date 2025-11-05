@@ -100,6 +100,8 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 
 void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry)
 {
+	//std::cout << "Chunk : ";
+	//std::cout << player_pos.chunk_x << " " << player_pos.chunk_y << " " << player_pos.chunk_z << std::endl;
 	// Calculate set of all chunks that should be active right now
 	std::set<ChunkPosition> needed_chunk_set;
 

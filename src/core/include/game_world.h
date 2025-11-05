@@ -6,6 +6,7 @@
 #include "assets/texture.h"
 #include "camera.h"
 #include "chunk.h"
+#include <cmath>
 #include <map>
 #include <utility>
 #include <vector>
@@ -19,18 +20,15 @@ struct WorldPosition {
 		chunk_z(0),
 		block_x(x),
 		block_y(y),
-		block_z(x) {Canonize();};
+		block_z(z) {Canonize();};
 	void Canonize() {
-		block_x += chunk_x * 16;
-		block_y += chunk_y * 16;
-		block_z += chunk_z * 16;
-		chunk_x = block_x / 16;
-		chunk_y = block_y / 16;
-		chunk_z = block_z / 16;
-		block_x = block_x % 16;
-		block_x = block_x % 16;
-		block_y = block_y % 16;
-		block_z = block_z % 16;
+		int g_x = block_x + chunk_x * 16;
+		int g_y = block_y + chunk_y * 16;
+		int g_z = block_z + chunk_z * 16;
+
+		chunk_x = floor((double)g_x / 16.0);
+		chunk_y = floor((double)g_y / 16.0);
+		chunk_z = floor((double)g_z / 16.0);
 	};
 };
 
