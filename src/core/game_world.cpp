@@ -9,8 +9,8 @@
 #include <vector>
 #include "glad/glad.h"
 
-#define H_RENDER 7
-#define V_RENDER 4
+#define H_RENDER 12 
+#define V_RENDER 6 
 #define MAX_CHUNKS ((H_RENDER + H_RENDER + 1) * (H_RENDER + H_RENDER + 1) * (V_RENDER + V_RENDER + 1)) 
 
 GameWorld GameWorld::New() 
@@ -143,7 +143,7 @@ void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *regi
 		generator->PopulateChunk(&m.chunks[id]);
 		m.chunks[id].RegnerateMesh(registry);
 		chunks_generated++;
-		if (chunks_generated >= 32) {return;}
+		if (chunks_generated >= 16) {return;}
 	}
 }
 

@@ -18,7 +18,7 @@
 
 Chunk chunk;
 
-glm::vec3 camera_pos = glm::vec3(1, 1, 1);
+glm::vec3 camera_pos = glm::vec3(1, 100, 1);
 float pitch;
 float yaw;
 
