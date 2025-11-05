@@ -18,8 +18,6 @@ Shader::Shader(std::string vertex, std::string fragment)
 	raw_vertex = vertex.c_str();
 	raw_fragment = fragment.c_str();
 
-	std::cout << "Vertex:" << std::endl << vertex << std::endl;
-	std::cout << "Fragment:" << std::endl << fragment << std::endl;
    
 	// vertex Shader
 	vert_shader = glCreateShader(GL_VERTEX_SHADER);
