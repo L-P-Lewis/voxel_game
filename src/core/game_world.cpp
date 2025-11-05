@@ -135,11 +135,15 @@ void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *regi
 		DeactivateChunk(pos);
 	}
 
+	int chunks_generated = 0;
+
 	for (ChunkPosition pos : needed_chunk_set) {
 		ActivateChunk(pos);
 		ChunkID id = GetChunkID(pos);
 		generator->PopulateChunk(&m.chunks[id]);
 		m.chunks[id].RegnerateMesh(registry);
+		chunks_generated++;
+		if (chunks_generated >= 32) {return;}
 	}
 }
 
