@@ -25,7 +25,7 @@ void WorldGenerator::PopulateChunk(Chunk *chunk)
 
 			float w = x + z;
 
-			float fh = 8 * std::sin(x * 0.1);
+			float fh = 8 * std::sin(w * 0.1);
 
 
 			GenerateColumn(chunk, cx, cz, fh);
