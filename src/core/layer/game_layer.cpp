@@ -23,7 +23,7 @@ float yaw;
 
 
 
-GameLayer GameLayer::New()
+GameLayer* GameLayer::New()
 {
 	BlockRegistry registry;
 	Camera camera;
@@ -50,7 +50,7 @@ GameLayer GameLayer::New()
 
 	GameWorld world = GameWorld::New();
 
-	return GameLayer(M{
+	return new GameLayer(M{
 		.camera = camera,
 		.registry = registry,
 		.terrain = terrain,
@@ -93,6 +93,7 @@ bool GameLayer::tick()
 	m.camera.setPosition(camera_pos);
 	m.camera.setYaw(yaw);
 	m.camera.setPitch(pitch);
+	m.world.UpdateActiveChunks(WorldPosition(0, 0, 0), &m.registry);
 	return true;
 }
 

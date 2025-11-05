@@ -32,17 +32,43 @@ class ChunkMesh {
 		
 };
 
+struct ChunkPosition {
+	int x, y, z;
+};
+
+
+inline bool operator< (const ChunkPosition& lhs, const ChunkPosition& rhs) { 
+	if (lhs.x < rhs.x) return true;
+	if (lhs.x > rhs.x) return false;
+	if (lhs.y < rhs.y) return true;
+	if (lhs.y > rhs.y) return false;
+	if (lhs.z < rhs.z) return true;
+	if (lhs.z > rhs.z) return false;
+	return false;
+}
+inline bool operator> (const ChunkPosition& lhs, const ChunkPosition& rhs) { return rhs < lhs; }
+inline bool operator<=(const ChunkPosition& lhs, const ChunkPosition& rhs) { return !(lhs > rhs); }
+inline bool operator>=(const ChunkPosition& lhs, const ChunkPosition& rhs) { return !(lhs < rhs); }
+inline bool operator==(const ChunkPosition& lhs, const ChunkPosition& rhs) { return lhs.x == rhs.x && lhs.y == rhs.y && lhs.z == rhs.z; }
+inline bool operator!=(const ChunkPosition& lhs, const ChunkPosition& rhs) { return !(lhs == rhs); }
+
+
 
 class Chunk {
 	private:
 		BlockHandle blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
-		int chunk_x, chunk_y, chunk_z;
+		ChunkPosition pos;
 		ChunkMesh *mesh;
 	public:
+		void Init(ChunkPosition position) {
+			pos = position;
+			Fill(0);
+		};
 		void Fill(BlockHandle handle);
 		void RegnerateMesh(BlockRegistry *block_registry);
 		void Draw(Shader &shader);
 		glm::mat4 GetChunkTransform() const;
+		ChunkPosition GetPosition() const {return pos;};
 		BlockHandle GetBlock(int x, int y, int z) {
 			if (x >= CHUNK_SIZE || y >= CHUNK_SIZE || z >= CHUNK_SIZE) {
 				return 0;

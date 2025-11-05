@@ -6,6 +6,7 @@
 #include "assets/texture.h"
 #include "camera.h"
 #include "chunk.h"
+#include <map>
 #include <utility>
 #include <vector>
 
@@ -33,15 +34,24 @@ struct WorldPosition {
 	};
 };
 
+typedef unsigned int ChunkID;
 
 class GameWorld {
 	private:
 		struct M {
 			std::vector<Chunk> chunks;
+			std::vector<ChunkID> free_chunk_ids;
+			std::map<ChunkPosition, ChunkID> active_chunks;
 		} m;
 		explicit GameWorld(M m) : m(std::move(m)) {};
+		void ActivateChunk(ChunkPosition pos);
+		void DeactivateChunk(ChunkPosition pos);
+		ChunkID GetChunkID(ChunkPosition pos);
+		bool IsChunkActive(ChunkPosition pos);
+
 	public:
 		static GameWorld New();
 		void Draw(Camera &camera, Shader &shader, Texture &terrain);
-		void UpdateActiveChunks(WorldPosition player_pos);
+		void UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry);
+
 };

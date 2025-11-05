@@ -152,5 +152,5 @@ void Chunk::Draw(Shader &shader)
 
 glm::mat4 Chunk::GetChunkTransform() const {
 
-	return glm::translate(glm::mat4(1), glm::vec3(chunk_x * CHUNK_SIZE, chunk_y * CHUNK_SIZE, chunk_z * CHUNK_SIZE));
+	return glm::translate(glm::mat4(1), glm::vec3(pos.x * CHUNK_SIZE, pos.y* CHUNK_SIZE, pos.z * CHUNK_SIZE));
 }

@@ -21,6 +21,7 @@ void VoxelGame::init() {
     glfwSetFramebufferSizeCallback(window->getHandle(), framebuffer_size_callback);
 	asset_manager = new AssetManager(std::filesystem::current_path() / "assets");
     appLayerManager = new AppLayerManager();
+	pushAppLayer(GameLayer::New());
 }
 
 void VoxelGame::destroy() {

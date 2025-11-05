@@ -24,7 +24,7 @@ class GameLayer : public AppLayer {
 		} m;
 		explicit GameLayer(M m) : m(std::move(m)) {};
 	public:
-		static GameLayer New();
+		static GameLayer* New();
 		void render(float deltaTime) override;
 		bool tick() override;
 		void resize(int width, int height) override;
