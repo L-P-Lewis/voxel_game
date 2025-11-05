@@ -8,7 +8,7 @@ WorldGenerator::WorldGenerator()
 {
 	noise.SetNoiseType(FastNoise::SimplexFractal);
 	noise.SetFractalOctaves(8);
-	noise.SetFrequency(0.001);
+	noise.SetFrequency(0.005);
 }
 
 

@@ -15,10 +15,11 @@ struct Block {
 	uint8_t east_texture;
 	uint8_t west_texture;
 	static Block AllSides(uint8_t tex);
+	static Block Barrel(uint8_t top, uint8_t sides, uint8_t bottom);
 };
 
 
-typedef uint16_t BlockHandle;
+typedef uint8_t BlockHandle;
 
 
 class BlockRegistry {

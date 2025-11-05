@@ -32,6 +32,8 @@ GameLayer* GameLayer::New()
 
 	registry.RegisterBlock("air", Block::AllSides(0));
 	registry.RegisterBlock("stone", Block::AllSides(1));
+	registry.RegisterBlock("dirt", Block::AllSides(2));
+	registry.RegisterBlock("grass", Block::Barrel(3, 4, 2));
 
 
 	Shader shader = VoxelGame::getAssetManager().GetShader("chunk_shader");
