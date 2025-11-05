@@ -1,6 +1,7 @@
 #include "worldgen.h"
 #include "FastNoise.h"
 #include "chunk.h"
+#include "glm/common.hpp"
 #include <cmath>
 #include <cstdlib>
 
@@ -13,8 +14,28 @@ WorldGenerator::WorldGenerator()
 	continentalness.SetNoiseType(FastNoise::SimplexFractal);
 	continentalness.SetFractalOctaves(1);
 	continentalness.SetFrequency(0.00001);
+	cave_noise.SetNoiseType(FastNoise::Simplex);
+	cave_noise.SetFrequency(0.05);
 }
 
+
+void CarveCaves(Chunk *chunk, int cx, int cz, int cave_height, FastNoise &cave_noise) 
+{
+	
+	int chunk_floor = chunk->GetPosition().y * 16;
+	int x = chunk->GetPosition().x * 16 + cx;
+	int z = chunk->GetPosition().z * 16 + cz;
+	for (int cy = 0; cy < 16; cy++) {
+		int y = chunk_floor + cy;
+		float base_cave_power = (cave_noise.GetNoise(x, y, z) + 1.0) / 2.0;
+
+		base_cave_power *= glm::clamp(0.1 * (cave_height - y), 0.0, 1.0);
+
+		if (base_cave_power > 0.5) {
+			chunk->SetBlock(cx, cy, cz, 0);
+		}
+	}
+}
 
 void GenerateColumn(Chunk *chunk, int cx, int cz, int floor_height, int toplayer_width, int snow_height)
 {
@@ -79,6 +100,9 @@ void WorldGenerator::PopulateChunk(Chunk *chunk)
 			float sh = noise.GetNoise(z, x) * 16 + 32; 
 
 			GenerateColumn(chunk, cx, cz, fh, dirt_size, sh);
+
+			float cave_height = fh + cave_noise.GetNoise(x, 100, z) * 16 - 4.0;
+			CarveCaves(chunk, cx, cz, cave_height, cave_noise);
 		}
 	}
 }
