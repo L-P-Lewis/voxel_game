@@ -12,6 +12,7 @@ add_executable(voxel_core
  "./block.cpp"
  "./chunk.cpp"
  "./game_world.cpp"
+ "./worldgen.cpp"
 )
 
 # Copy assets to output directory on build

@@ -141,6 +141,10 @@ void Chunk::RegnerateMesh(BlockRegistry *block_registry)
 			}
 		}
 	}
+	if (indices.empty()) {
+		this->mesh = nullptr;
+		return;
+	}
 
 	this->mesh = new ChunkMesh(vertices, indices);
 }

@@ -9,7 +9,7 @@
 #include <vector>
 #include "glad/glad.h"
 
-#define MAX_CHUNKS 64
+#define MAX_CHUNKS (9 * 9 * 9) 
 
 GameWorld GameWorld::New() 
 {
@@ -40,11 +40,11 @@ void GameWorld::ActivateChunk(ChunkPosition pos)
 	}
 	m.active_chunks[pos] = new_id;
 	m.chunks[new_id].Init(pos);
-	for (int x = 0; x < 8; x++) {
-		m.chunks[new_id].SetBlock(x, 0, 0, 1);
-		m.chunks[new_id].SetBlock(0, x, 0, 1);
-		m.chunks[new_id].SetBlock(0, 0, x, 1);
-	}
+	//for (int x = 0; x < 8; x++) {
+	//	m.chunks[new_id].SetBlock(x, 0, 0, 1);
+	//	m.chunks[new_id].SetBlock(0, x, 0, 1);
+	//	m.chunks[new_id].SetBlock(0, 0, x, 1);
+	//}
 }
 
 
@@ -98,16 +98,16 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 }
 
 
-void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry)
+void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry, WorldGenerator *generator)
 {
 	//std::cout << "Chunk : ";
 	//std::cout << player_pos.chunk_x << " " << player_pos.chunk_y << " " << player_pos.chunk_z << std::endl;
 	// Calculate set of all chunks that should be active right now
 	std::set<ChunkPosition> needed_chunk_set;
 
-	for (int x = -1; x < 2; x++) {
-		for (int y = -1; y < 2; y++) {
-			for (int z = -1; z < 2; z++) {
+	for (int x = -4; x < 5; x++) {
+		for (int y = -4; y < 5; y++) {
+			for (int z = -4; z < 5; z++) {
 				needed_chunk_set.insert({
 					player_pos.chunk_x + x,
 					player_pos.chunk_y + y,
@@ -136,6 +136,7 @@ void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *regi
 	for (ChunkPosition pos : needed_chunk_set) {
 		ActivateChunk(pos);
 		ChunkID id = GetChunkID(pos);
+		generator->PopulateChunk(&m.chunks[id]);
 		m.chunks[id].RegnerateMesh(registry);
 	}
 }

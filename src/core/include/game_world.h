@@ -6,6 +6,7 @@
 #include "assets/texture.h"
 #include "camera.h"
 #include "chunk.h"
+#include "worldgen.h"
 #include <cmath>
 #include <map>
 #include <utility>
@@ -50,6 +51,6 @@ class GameWorld {
 	public:
 		static GameWorld New();
 		void Draw(Camera &camera, Shader &shader, Texture &terrain);
-		void UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry);
+		void UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry, WorldGenerator *generator);
 
 };

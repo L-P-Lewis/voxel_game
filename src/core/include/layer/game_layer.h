@@ -3,6 +3,7 @@
 #include "assets/texture.h"
 #include "block.h"
 #include "game_world.h"
+#include "worldgen.h"
 #ifndef VOXEL_CORE_LAYER_TEST_LAYER_H_
 #define VOXEL_CORE_LAYER_TEST_LAYER_H_
 
@@ -21,6 +22,7 @@ class GameLayer : public AppLayer {
 			Texture terrain;
 			Shader chunk_shader;
 			GameWorld world;
+			WorldGenerator generator;
 		} m;
 		explicit GameLayer(M m) : m(std::move(m)) {};
 	public:

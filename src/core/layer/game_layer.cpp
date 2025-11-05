@@ -9,6 +9,7 @@
 #include "glm/fwd.hpp"
 #include "voxel_game.h"
 #include "window.h"
+#include "worldgen.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -50,12 +51,16 @@ GameLayer* GameLayer::New()
 
 	GameWorld world = GameWorld::New();
 
+	WorldGenerator worldgen;
+
 	return new GameLayer(M{
 		.camera = camera,
 		.registry = registry,
 		.terrain = terrain,
 		.chunk_shader = shader,
-		.world = world
+		.world = world,
+		.generator = worldgen
+
 	});
 }
 
@@ -93,7 +98,7 @@ bool GameLayer::tick()
 	m.camera.setPosition(camera_pos);
 	m.camera.setYaw(yaw);
 	m.camera.setPitch(pitch);
-	m.world.UpdateActiveChunks(WorldPosition(camera_pos.x, camera_pos.y, camera_pos.z), &m.registry);
+	m.world.UpdateActiveChunks(WorldPosition(camera_pos.x, camera_pos.y, camera_pos.z), &m.registry, &m.generator);
 	return true;
 }
 
