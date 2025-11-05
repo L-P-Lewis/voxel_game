@@ -9,7 +9,9 @@
 #include <vector>
 #include "glad/glad.h"
 
-#define MAX_CHUNKS (9 * 9 * 9) 
+#define H_RENDER 7
+#define V_RENDER 4
+#define MAX_CHUNKS ((H_RENDER + H_RENDER + 1) * (H_RENDER + H_RENDER + 1) * (V_RENDER + V_RENDER + 1)) 
 
 GameWorld GameWorld::New() 
 {
@@ -105,9 +107,9 @@ void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *regi
 	// Calculate set of all chunks that should be active right now
 	std::set<ChunkPosition> needed_chunk_set;
 
-	for (int x = -4; x < 5; x++) {
-		for (int y = -4; y < 5; y++) {
-			for (int z = -4; z < 5; z++) {
+	for (int x = -H_RENDER; x <= H_RENDER; x++) {
+		for (int y = -V_RENDER; y <= V_RENDER; y++) {
+			for (int z = -H_RENDER; z <= H_RENDER; z++) {
 				needed_chunk_set.insert({
 					player_pos.chunk_x + x,
 					player_pos.chunk_y + y,
