@@ -31,4 +31,4 @@ target_include_directories(voxel_core
 
 
 # Link libs
-target_link_libraries(voxel_core PRIVATE glad glfw glm::glm)
+target_link_libraries(voxel_core PRIVATE glad glfw glm::glm fastnoise)

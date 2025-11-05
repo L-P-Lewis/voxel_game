@@ -14,7 +14,7 @@ void main()
 {
     gl_Position = projection * view * model * vec4(position, 1.0);
     vTexCord = uv;
-    vec3 light_dir = normalize(vec3(1, 2.5, 0.2));
+    vec3 light_dir = normalize(vec3(1, 2, 1.5));
     fLight = dot(normal, light_dir);
     fLight = (fLight + 1.0) / 2.0;
 };

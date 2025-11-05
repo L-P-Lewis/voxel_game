@@ -8,3 +8,6 @@ add_subdirectory(glad/)
 
 # GLM Via Git Submodule for mathematic functions
 add_subdirectory(glm/)
+
+# Fastnoise library, added in wholesale since its just two files
+add_subdirectory(fastnoise/)
