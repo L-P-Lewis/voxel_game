@@ -3,7 +3,6 @@
 /**
  * Represents a block type
  */
-#include <cstddef>
 #include <cstdint>
 #include <map>
 #include <string>
@@ -19,7 +18,7 @@ struct Block {
 };
 
 
-typedef size_t BlockHandle;
+typedef uint16_t BlockHandle;
 
 
 class BlockRegistry {
