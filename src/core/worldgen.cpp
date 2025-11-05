@@ -1,6 +1,15 @@
 #include "worldgen.h"
+#include "FastNoise.h"
 #include "chunk.h"
 #include <cmath>
+
+
+WorldGenerator::WorldGenerator()
+{
+	noise.SetNoiseType(FastNoise::SimplexFractal);
+	noise.SetFractalOctaves(8);
+	noise.SetFrequency(0.001);
+}
 
 
 void GenerateColumn(Chunk *chunk, int cx, int cz, int floor_height)
@@ -23,9 +32,8 @@ void WorldGenerator::PopulateChunk(Chunk *chunk)
 			int x = cpos.x * 16 + cx;
 			int z = cpos.z * 16 + cz;
 
-			float w = x + z;
 
-			float fh = 8 * std::sin(w * 0.1);
+			float fh = 64 * noise.GetNoise((float)x, (float)z);
 
 
 			GenerateColumn(chunk, cx, cz, fh);
