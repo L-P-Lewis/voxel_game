@@ -113,3 +113,23 @@ void Camera::recalculateProjectionMatrix()
 	projection = glm::perspective(fov, aspectRatio, near, far);
 	// assert(false);
 }
+
+
+bool Camera::TestFrustumCull(glm::vec3 min, glm::vec3 max)
+{
+	glm::vec3 points[8] = {
+		glm::vec3(min.x, min.y, min.z),
+		glm::vec3(max.x, min.y, min.z),
+		glm::vec3(min.x, max.y, min.z),
+		glm::vec3(max.x, min.y, max.z),
+		glm::vec3(min.x, max.y, max.z),
+		glm::vec3(max.x, min.y, max.z),
+		glm::vec3(max.x, max.y, min.z),
+		glm::vec3(max.x, max.y, max.z)
+	};
+	ViewPlane near_plane = ViewPlane(position, glm::normalize(forwards));
+	for (int i = 0; i < 8; i++) {
+		if (near_plane.TestPoint(points[i])) return true;
+	}
+	return false;
+}

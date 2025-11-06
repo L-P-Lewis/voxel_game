@@ -7,7 +7,9 @@
 #include <map>
 #include <set>
 #include <vector>
+#include "chunk.h"
 #include "glad/glad.h"
+#include "glm/fwd.hpp"
 
 #define H_RENDER 12 
 #define V_RENDER 6 
@@ -93,8 +95,17 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 	terrain.Use();
 
 	for (auto const& [pos, id] : m.active_chunks) {
-		shader.set_uniform("model", m.chunks[id].GetChunkTransform());
+		Chunk *chunk = &m.chunks[id];
+		ChunkPosition chunk_pos = chunk->GetPosition();
 
+		glm::vec3 min = glm::vec3(chunk_pos.x * CHUNK_SIZE, chunk_pos.y * CHUNK_SIZE, chunk_pos.z * CHUNK_SIZE);
+		glm::vec3 max = min + glm::vec3(CHUNK_SIZE);
+
+		if (!camera.TestFrustumCull(min, max)) {
+			continue;
+		}
+
+		shader.set_uniform("model", m.chunks[id].GetChunkTransform());
 		m.chunks[id].Draw(shader);
 	}
 }

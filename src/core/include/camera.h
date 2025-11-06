@@ -1,4 +1,6 @@
 #pragma once
+#include "glm/fwd.hpp"
+#include "glm/geometric.hpp"
 #ifndef VOXEL_CORE_CAMERA_H_
 #define VOXEL_CORE_CAMERA_H_
 
@@ -71,6 +73,20 @@ class Camera {
 		[[nodiscard]] glm::mat4 getViewMatrix() const;
 		void recalculateViewMatrix();
 		void recalculateProjectionMatrix();
+		bool TestFrustumCull(glm::vec3 min, glm::vec3 max);
+};
+
+
+struct ViewPlane {
+	// Normal vector of the plane
+	glm::vec3 normal = {0.0, 0.0, 0.0};
+	// Distance of plane for origin in direction of normal
+	double distance;
+	ViewPlane(glm::vec3 point, glm::vec3 normal) : normal(normal), distance(glm::dot(normal, point)) {};
+	// Returns true if point is in front of plane
+	bool TestPoint(glm::vec3 point) {
+		return glm::dot(normal, point) > distance;
+	}
 };
 
 #endif
