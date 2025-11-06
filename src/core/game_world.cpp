@@ -3,7 +3,6 @@
 #include "assets/texture.h"
 #include "camera.h"
 #include <climits>
-#include <iostream>
 #include <map>
 #include <set>
 #include <vector>
@@ -44,11 +43,6 @@ void GameWorld::ActivateChunk(ChunkPosition pos)
 	}
 	m.active_chunks[pos] = new_id;
 	m.chunks[new_id].Init(pos);
-	//for (int x = 0; x < 8; x++) {
-	//	m.chunks[new_id].SetBlock(x, 0, 0, 1);
-	//	m.chunks[new_id].SetBlock(0, x, 0, 1);
-	//	m.chunks[new_id].SetBlock(0, 0, x, 1);
-	//}
 }
 
 
@@ -113,8 +107,6 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 
 void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *registry, WorldGenerator *generator)
 {
-	//std::cout << "Chunk : ";
-	//std::cout << player_pos.chunk_x << " " << player_pos.chunk_y << " " << player_pos.chunk_z << std::endl;
 	// Calculate set of all chunks that should be active right now
 	std::set<ChunkPosition> needed_chunk_set;
 
@@ -154,6 +146,7 @@ void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *regi
 		generator->PopulateChunk(&m.chunks[id]);
 		m.chunks[id].RegnerateMesh(registry);
 		chunks_generated++;
+		// Limit chunk generation on a given frame since it's pretty expensive
 		if (chunks_generated >= 16) {return;}
 	}
 }
