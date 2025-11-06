@@ -16,13 +16,11 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <string>
 
+#include "mouse_handler.h"
+
 Chunk chunk;
 
 glm::vec3 camera_pos = glm::vec3(1, 100, 1);
-float pitch;
-float yaw;
-
-
 
 GameLayer* GameLayer::New()
 {
@@ -48,7 +46,7 @@ GameLayer* GameLayer::New()
 	camera.setRoll(0);
 	camera.setPitch(0);
 	camera.setPerspective();
-	camera.setAspectRatio(1.0);
+	camera.setAspectRatio(VoxelGame::getWindow().getWidth() / static_cast<float>(VoxelGame::getWindow().getHeight()));
 	camera.recalculateProjectionMatrix();
 	camera.recalculateViewMatrix();
 
@@ -69,6 +67,7 @@ GameLayer* GameLayer::New()
 
 void GameLayer::render(float deltaTime) 
 {
+	MouseHandler::turnCamera(m.camera);
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 	m.world.Draw(m.camera, m.chunk_shader, m.terrain);
 }
@@ -89,18 +88,7 @@ bool GameLayer::tick()
     if (glfwGetKey(VoxelGame::getWindow().getHandle(), GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
         camera_pos += cameraSpeed * glm::vec3(0.0, -1.0, 0.0);
 
-	float mouse_sensitivity = 0.0001f;
-
-	pitch -= VoxelGame::getWindow().get_mouse_acc_y();
-	yaw += VoxelGame::getWindow().get_mouse_acc_x();
-	VoxelGame::getWindow().clear_mouse_acc();
-
-	if (pitch > 89.0) pitch = 89.0;
-	if (pitch < -89.0) pitch = -89.0;
-
 	m.camera.setPosition(camera_pos);
-	m.camera.setYaw(yaw);
-	m.camera.setPitch(pitch);
 	m.world.UpdateActiveChunks(WorldPosition(camera_pos.x, camera_pos.y, camera_pos.z), &m.registry, &m.generator);
 	return true;
 }

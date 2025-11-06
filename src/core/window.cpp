@@ -1,8 +1,8 @@
 #include <iostream>
 #include "window.h"
+#include "mouse_handler.h"
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
-#include "voxel_game.h"
 
 bool first_mouse = true;
 
@@ -11,22 +11,6 @@ Window::Window(const int width, const int height, const bool resizeable, const c
     this->height = height;
     this->resizeable = resizeable;
     this->title = title;
-}
-
-void mouse_callback(GLFWwindow *window, double xpos, double ypos)
-{
-	Window& main_window = VoxelGame::getWindow(); 
-
-	if (first_mouse) {
-		first_mouse = false;
-		main_window.mpos_x = xpos;
-		main_window.mpos_y = ypos;
-	} else {
-	main_window.accumulated_mouse_x += xpos - main_window.mpos_x;
-	main_window.accumulated_mouse_y += ypos - main_window.mpos_y;
-	main_window.mpos_x = xpos;
-	main_window.mpos_y = ypos;
-	}
 }
 
 void Window::init() {
@@ -48,8 +32,8 @@ void Window::init() {
         return;
     }
 
-	glfwSetInputMode(handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED); 
-	glfwSetCursorPosCallback(handle, mouse_callback);
+    MouseHandler::setup(*this);
+    MouseHandler::enableCursor(false);
 
     glViewport(0, 0, getWidth(), getHeight());
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
