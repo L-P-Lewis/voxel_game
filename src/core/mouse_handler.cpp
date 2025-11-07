@@ -1,5 +1,7 @@
 #include "include/mouse_handler.h"
 
+#include <iostream>
+
 #include "camera.h"
 #include "voxel_game.h"
 #include "window.h"
@@ -22,7 +24,7 @@ void MouseHandler::onMouseMove(GLFWwindow *window, double xpos, double ypos) {
     if (window == VoxelGame::getWindow().getHandle()) {
         accumulatedDX += xpos - xPos;
         accumulatedDY += ypos - yPos;
-
+        accumulatedDY = std::clamp(accumulatedDY, -200.0, 200.0);
         xPos = xpos;
         yPos = ypos;
     }
@@ -46,8 +48,7 @@ void MouseHandler::turnCamera(Camera &camera) {
 
     double x = accumulatedDX * d4;
     double y = accumulatedDY * d4;
-
-    float newPitch =  camera.getPitch() - static_cast<float>(y);
+    float newPitch = camera.getPitch() - static_cast<float>(y);
     float newYaw = camera.getYaw() + static_cast<float>(x);
     camera.setPitch(newPitch);
     camera.setYaw(newYaw);
