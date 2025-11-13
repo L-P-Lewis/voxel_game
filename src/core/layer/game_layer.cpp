@@ -17,6 +17,8 @@
 #include <string>
 
 #include "mouse_handler.h"
+#include "render_texture.h"
+#include "texture_attachment.h"
 
 Chunk chunk;
 
@@ -27,6 +29,10 @@ GameLayer* GameLayer::New()
 	BlockRegistry registry;
 	Camera camera;
 	Texture terrain;
+
+	TextureAttachment depth = TextureAttachment::createDepthAttachment();
+	TextureAttachment color = TextureAttachment(GL_COLOR_ATTACHMENT0, "color");
+	RenderTexture framebuffer = RenderTexture({depth, color});
 
 	registry.RegisterBlock("air", Block::AllSides(0));
 	registry.RegisterBlock("stone", Block::AllSides(1));
@@ -60,8 +66,8 @@ GameLayer* GameLayer::New()
 		.terrain = terrain,
 		.chunk_shader = shader,
 		.world = world,
-		.generator = worldgen
-
+		.generator = worldgen,
+		.framebuffer = framebuffer
 	});
 }
 

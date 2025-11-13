@@ -11,6 +11,8 @@
 #include "camera.h"
 #include "voxel_game.h"
 #include "app_layer.h"
+#include "render_texture.h"
+#include "window.h"
 
 
 // Test layer for initial milestone
@@ -23,8 +25,12 @@ class GameLayer : public AppLayer {
 			Shader chunk_shader;
 			GameWorld world;
 			WorldGenerator generator;
+			RenderTexture framebuffer;
 		} m;
-		explicit GameLayer(M m) : m(std::move(m)) {};
+		explicit GameLayer(M m) : m(std::move(m)) {
+			m.framebuffer.createBuffers(VoxelGame::getWindow().getWidth(), VoxelGame::getWindow().getHeight());
+			m.framebuffer.unbindWrite();
+		};
 	public:
 		static GameLayer* New();
 		void render(float deltaTime) override;

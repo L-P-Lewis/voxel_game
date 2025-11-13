@@ -14,6 +14,8 @@ add_executable(voxel_core
  "./game_world.cpp"
  "./worldgen.cpp"
  "./mouse_handler.cpp"
+ "./render_texture.cpp"
+ "./texture_attachment.cpp"
 )
 
 # Copy assets to output directory on build
