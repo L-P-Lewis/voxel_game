@@ -10,8 +10,8 @@
 #include "glad/glad.h"
 #include "glm/fwd.hpp"
 
-#define H_RENDER 12 
-#define V_RENDER 6 
+#define H_RENDER 4 
+#define V_RENDER 3 
 #define MAX_CHUNKS ((H_RENDER + H_RENDER + 1) * (H_RENDER + H_RENDER + 1) * (V_RENDER + V_RENDER + 1)) 
 
 GameWorld GameWorld::New() 

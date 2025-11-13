@@ -24,7 +24,7 @@ void MouseHandler::onMouseMove(GLFWwindow *window, double xpos, double ypos) {
     if (window == VoxelGame::getWindow().getHandle()) {
         accumulatedDX += xpos - xPos;
         accumulatedDY += ypos - yPos;
-        accumulatedDY = std::clamp(accumulatedDY, -200.0, 200.0);
+        accumulatedDY = glm::clamp(accumulatedDY, -200.0, 200.0);
         xPos = xpos;
         yPos = ypos;
     }

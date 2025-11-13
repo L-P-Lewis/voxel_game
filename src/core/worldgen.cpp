@@ -22,10 +22,10 @@ WorldGenerator::WorldGenerator()
 void CarveCaves(Chunk *chunk, int cx, int cz, int cave_height, FastNoise &cave_noise) 
 {
 	
-	int chunk_floor = chunk->GetPosition().y * 16;
-	int x = chunk->GetPosition().x * 16 + cx;
-	int z = chunk->GetPosition().z * 16 + cz;
-	for (int cy = 0; cy < 16; cy++) {
+	int chunk_floor = chunk->GetPosition().y * CHUNK_SIZE;
+	int x = chunk->GetPosition().x * CHUNK_SIZE + cx;
+	int z = chunk->GetPosition().z * CHUNK_SIZE + cz;
+	for (int cy = 0; cy < CHUNK_SIZE; cy++) {
 		int y = chunk_floor + cy;
 		float base_cave_power = (cave_noise.GetNoise(x, y, z) + 1.0) / 2.0;
 
@@ -39,10 +39,10 @@ void CarveCaves(Chunk *chunk, int cx, int cz, int cave_height, FastNoise &cave_n
 
 void GenerateColumn(Chunk *chunk, int cx, int cz, int floor_height, int toplayer_width, int snow_height)
 {
-	int chunk_floor = chunk->GetPosition().y * 16;
+	int chunk_floor = chunk->GetPosition().y * CHUNK_SIZE;
 	int relative_floor = floor_height - chunk_floor;
 	if (relative_floor < 0) return;
-	if (relative_floor > 16) relative_floor = 16;
+	if (relative_floor > CHUNK_SIZE) relative_floor = CHUNK_SIZE;
 	for (int y = 0; y < relative_floor; y++) {
 		int gy = chunk_floor + y;
 		int depth = floor_height - gy;
@@ -79,11 +79,11 @@ float SampleFloorHeight(FastNoise &base, FastNoise &continentalness, float x, fl
 void WorldGenerator::PopulateChunk(Chunk *chunk)
 {
 	ChunkPosition cpos = chunk->GetPosition();
-	for (int cx = 0; cx < 16; cx++) {
-		for (int cz = 0; cz < 16; cz++) {
+	for (int cx = 0; cx < CHUNK_SIZE; cx++) {
+		for (int cz = 0; cz < CHUNK_SIZE; cz++) {
 
-			int x = cpos.x * 16 + cx;
-			int z = cpos.z * 16 + cz;
+			int x = cpos.x * CHUNK_SIZE + cx;
+			int z = cpos.z * CHUNK_SIZE + cz;
 
 			float fh = SampleFloorHeight(noise, continentalness,(float)x, (float)z);
 
