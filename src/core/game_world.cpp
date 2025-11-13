@@ -13,6 +13,7 @@
 #define H_RENDER 4 
 #define V_RENDER 3 
 #define MAX_CHUNKS ((H_RENDER + H_RENDER + 1) * (H_RENDER + H_RENDER + 1) * (V_RENDER + V_RENDER + 1)) 
+#define MAX_CHUNK_GENERATION 1
 
 GameWorld GameWorld::New() 
 {
@@ -147,8 +148,9 @@ void GameWorld::UpdateActiveChunks(WorldPosition player_pos, BlockRegistry *regi
 		m.chunks[id].RegnerateMesh(registry);
 		chunks_generated++;
 		// Limit chunk generation on a given frame since it's pretty expensive
-		if (chunks_generated >= 16) {return;}
+		if (chunks_generated >= MAX_CHUNK_GENERATION) {return;}
 	}
+	generator->ClearCache();
 }
 
 

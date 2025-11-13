@@ -22,7 +22,7 @@
 
 Chunk chunk;
 
-glm::vec3 camera_pos = glm::vec3(1, 100, 1);
+glm::vec3 camera_pos = glm::vec3(1, 32, 1);
 
 GameLayer* GameLayer::New()
 {
@@ -39,6 +39,8 @@ GameLayer* GameLayer::New()
 	registry.RegisterBlock("dirt", Block::AllSides(2));
 	registry.RegisterBlock("grass", Block::Barrel(3, 4, 2));
 	registry.RegisterBlock("snow", Block::AllSides(5));
+	registry.RegisterBlock("gravel", Block::AllSides(6));
+	registry.RegisterBlock("sand", Block::AllSides(7));
 
 
 	Shader shader = VoxelGame::getAssetManager().GetShader("chunk_shader");

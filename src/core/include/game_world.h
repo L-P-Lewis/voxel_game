@@ -23,13 +23,13 @@ struct WorldPosition {
 		block_y(y),
 		block_z(z) {Canonize();};
 	void Canonize() {
-		int g_x = block_x + chunk_x * 16;
-		int g_y = block_y + chunk_y * 16;
-		int g_z = block_z + chunk_z * 16;
+		int g_x = block_x + chunk_x * CHUNK_SIZE;
+		int g_y = block_y + chunk_y * CHUNK_SIZE;
+		int g_z = block_z + chunk_z * CHUNK_SIZE;
 
-		chunk_x = floor((double)g_x / 16.0);
-		chunk_y = floor((double)g_y / 16.0);
-		chunk_z = floor((double)g_z / 16.0);
+		chunk_x = floor((double)g_x / CHUNK_SIZE);
+		chunk_y = floor((double)g_y / CHUNK_SIZE);
+		chunk_z = floor((double)g_z / CHUNK_SIZE);
 	};
 };
 
