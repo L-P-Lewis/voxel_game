@@ -23,8 +23,8 @@ WorldGenerator::WorldGenerator()
 	world_biomes.push_back({
 		.min_cont = -1.0,
 		.max_cont = -0.5,
-		.terain_min = 5,
-		.terain_max = 15,
+		.terain_min = -40,
+		.terain_max = -10,
 		.upper_block = 5
 	});
 	// Beach
@@ -74,11 +74,11 @@ BiomeDef WorldGenerator::GetBiome(ChunkPosition map_position)
 	int test_x = map_position.x / 8;
 	int test_z = map_position.z / 8;
 	ChunkPosition test_pos = {test_x, 0, test_z};
-	//if (world_biome_cache.contains(test_pos)) {
-	//	return world_biome_cache.at(test_pos);
-	//}
+	if (world_biome_cache.contains(test_pos)) {
+		return world_biome_cache.at(test_pos);
+	}
 	BiomeDef biome = GetBiomeRaw(test_pos);
-	//world_biome_cache.emplace(test_pos, biome);
+	world_biome_cache.emplace(test_pos, biome);
 	return biome;
 }
 
@@ -90,7 +90,7 @@ float WorldGenerator::GetHeightmapValue(ChunkPosition map_position)
 	}
 	float pos_sample = noise.GetNoise(map_position.x, map_position.z);
 	pos_sample = (pos_sample + 1.0) / 2.0;
-	world_biome_cache.emplace(map_position, pos_sample);
+	world_height_cache.emplace(map_position, pos_sample);
 	return pos_sample;
 }
 
