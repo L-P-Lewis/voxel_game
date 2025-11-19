@@ -6,6 +6,7 @@
 #include <cmath>
 #include <cstdlib>
 #include <iostream>
+#include <map>
 
 
 WorldGenerator::WorldGenerator()
@@ -57,6 +58,9 @@ WorldGenerator::WorldGenerator()
 
 BiomeDef WorldGenerator::GetBiomeRaw(ChunkPosition map_position)
 {
+	if (world_biome_cache.contains(map_position)) {
+		return world_biome_cache.at(map_position);
+	}
 	float cont = continentalness.GetNoise(map_position.x, map_position.z);
 	BiomeDef best_fit = world_biomes.front();
 	bool found_biome_fit = false;;
@@ -66,21 +70,37 @@ BiomeDef WorldGenerator::GetBiomeRaw(ChunkPosition map_position)
 			found_biome_fit = true;
 		}
 	}
+	world_biome_cache.emplace(map_position, best_fit);
 	return best_fit;
 }
 
+
+
 BiomeDef WorldGenerator::GetBiome(ChunkPosition map_position)
 {
-	int test_x = map_position.x / 8;
-	int test_z = map_position.z / 8;
-	ChunkPosition test_pos = {test_x, 0, test_z};
-	if (world_biome_cache.contains(test_pos)) {
-		return world_biome_cache.at(test_pos);
-	}
-	BiomeDef biome = GetBiomeRaw(test_pos);
-	world_biome_cache.emplace(test_pos, biome);
-	return biome;
+	int test_x = floor(map_position.x / 8.0);
+	int test_z = floor(map_position.z / 8.0);
+	float blend_ud = (map_position.z - (test_z * 8)) / 8.0f;
+	float blend_rl = (map_position.x - (test_x * 8)) / 8.0f;
+
+	blend_rl = 1.0 - blend_rl;
+	blend_ud = 1.0 - blend_ud;
+
+	ChunkPosition tl_pos = {test_x, 0, test_z};
+	BiomeDef tl_biome = GetBiomeRaw(tl_pos);
+	ChunkPosition bl_pos = {test_x, 0, test_z + 1};
+	BiomeDef bl_biome = GetBiomeRaw(bl_pos);
+
+	ChunkPosition tr_pos = {test_x + 1, 0, test_z};
+	BiomeDef tr_biome = GetBiomeRaw(tr_pos);
+	ChunkPosition br_pos = {test_x + 1, 0, test_z + 1};
+	BiomeDef br_biome = GetBiomeRaw(br_pos);
+
+
+	return BiomeDef::blend(BiomeDef::blend(tl_biome, bl_biome, blend_ud), BiomeDef::blend(tr_biome, br_biome, blend_ud), blend_rl);
 }
+
+
 
 
 float WorldGenerator::GetHeightmapValue(ChunkPosition map_position)

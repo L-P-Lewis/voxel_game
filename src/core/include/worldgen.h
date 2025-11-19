@@ -9,7 +9,7 @@
 
 
 #define LERP(from, to, blend) ((float)from * blend) + ((float)to * (1.0f - blend))
-#define CUTOFF(from, to, blend) (blend < 0.5 ? from : to)
+#define CUTOFF(from, to, blend) (blend > 0.5 ? from : to)
 
 struct BiomeDef 
 {
