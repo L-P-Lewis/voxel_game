@@ -10,6 +10,7 @@
 #include "voxel_game.h"
 #include "window.h"
 #include "worldgen.h"
+#include <ctime>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
@@ -61,7 +62,7 @@ GameLayer* GameLayer::New()
 
 	GameWorld world = GameWorld::New();
 
-	WorldGenerator worldgen;
+	WorldGenerator worldgen(time(NULL));
 
 	return new GameLayer(M{
 		.camera = camera,
