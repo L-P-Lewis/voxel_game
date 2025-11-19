@@ -16,9 +16,12 @@ WorldGenerator::WorldGenerator()
 	noise.SetFrequency(0.005);
 	continentalness.SetNoiseType(FastNoise::SimplexFractal);
 	continentalness.SetFractalOctaves(1);
-	continentalness.SetFrequency(0.1);
+	continentalness.SetFrequency(0.05);
 	cave_noise.SetNoiseType(FastNoise::Simplex);
 	cave_noise.SetFrequency(0.05);
+
+	biome_blend_noise.SetNoiseType(FastNoise::Simplex);
+	biome_blend_noise.SetFrequency(0.1);
 
 	// Ocean Biome
 	world_biomes.push_back({
@@ -170,7 +173,11 @@ void WorldGenerator::PopulateChunk(Chunk *chunk)
 
 			int x = cpos.x * CHUNK_SIZE + cx;
 			int z = cpos.z * CHUNK_SIZE + cz;
-			BiomeDef biome = GetBiome({x, 0, z});
+
+			int biome_off_x = biome_blend_noise.GetNoise(x, z, -10) * 4;
+			int biome_off_z = biome_blend_noise.GetNoise(x, z, 10) * 4;
+
+			BiomeDef biome = GetBiome({x + biome_off_x, 0, z + biome_off_z});
 
 			float base_heightmap = GetHeightmapValue({x, 0, z});
 

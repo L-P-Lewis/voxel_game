@@ -46,6 +46,7 @@ class WorldGenerator {
 		FastNoise noise;
 		FastNoise continentalness;
 		FastNoise cave_noise;
+		FastNoise biome_blend_noise;
 		std::map<ChunkPosition, float> world_height_cache;
 		std::map<ChunkPosition, BiomeDef> world_biome_cache;
 		std::vector<BiomeDef> world_biomes;
