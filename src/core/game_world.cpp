@@ -13,7 +13,7 @@
 #define H_RENDER 4 
 #define V_RENDER 3 
 #define MAX_CHUNKS ((H_RENDER + H_RENDER + 1) * (H_RENDER + H_RENDER + 1) * (V_RENDER + V_RENDER + 1)) 
-#define MAX_CHUNK_GENERATION 1
+#define MAX_CHUNK_GENERATION 16
 
 GameWorld GameWorld::New() 
 {

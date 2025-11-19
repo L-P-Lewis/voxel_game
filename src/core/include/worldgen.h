@@ -15,6 +15,8 @@ struct BiomeDef
 {
 	float min_cont = -1.0;
 	float max_cont = 1.0;
+	float min_temp = -1.0;
+	float max_temp = 1.0;
 	float terain_min = 0.0;
 	float terain_max = 0.0;
 	int upper_block = 1;
@@ -29,15 +31,17 @@ struct BiomeDef
 				.toper_block = CUTOFF(from.toper_block, to.toper_block, blend)
 		};
 	};
-	bool CheckFit(float continentalness)
+	bool CheckFit(float continentalness, float temperature)
 	{
 		if (continentalness > max_cont) {return false;}
 		if (continentalness < min_cont) {return false;}
+		if (temperature > max_temp) {return false;}
+		if (temperature < min_temp) {return false;}
 		return true;
 	}
 	float MapHeight(float height)
 	{
-		return height * (terain_max - terain_min) + terain_min;
+		return (height * (terain_max - terain_min)) + terain_min;
 	}
 };
 
@@ -45,6 +49,7 @@ class WorldGenerator {
 	private:
 		FastNoise noise;
 		FastNoise continentalness;
+		FastNoise temperature;
 		FastNoise cave_noise;
 		FastNoise biome_blend_noise;
 		std::map<ChunkPosition, float> world_height_cache;
@@ -52,7 +57,7 @@ class WorldGenerator {
 		std::vector<BiomeDef> world_biomes;
 		BiomeDef GetBiomeRaw(ChunkPosition map_position);
 	public:
-		WorldGenerator();
+		WorldGenerator(uint64_t seed = 1337);
 		void ClearCache();
 		void PopulateChunk(Chunk *chunk);
 		float GetHeightmapValue(ChunkPosition map_position);

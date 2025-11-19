@@ -9,52 +9,117 @@
 #include <map>
 
 
-WorldGenerator::WorldGenerator()
+WorldGenerator::WorldGenerator(uint64_t seed)
 {
 	noise.SetNoiseType(FastNoise::SimplexFractal);
 	noise.SetFractalOctaves(8);
 	noise.SetFrequency(0.005);
+	noise.SetSeed(seed);
+	seed = seed ^ (seed * 7);
 	continentalness.SetNoiseType(FastNoise::SimplexFractal);
 	continentalness.SetFractalOctaves(1);
-	continentalness.SetFrequency(0.05);
+	continentalness.SetFrequency(0.01);
+	continentalness.SetSeed(seed);
+	seed = seed ^ (seed * 7);
+	temperature.SetNoiseType(FastNoise::SimplexFractal);
+	temperature.SetFractalOctaves(1);
+	temperature.SetFrequency(0.01);
+	temperature.SetSeed(seed);
+	seed = seed ^ (seed * 7);
 	cave_noise.SetNoiseType(FastNoise::Simplex);
-	cave_noise.SetFrequency(0.05);
+	cave_noise.SetFrequency(0.01);
 
 	biome_blend_noise.SetNoiseType(FastNoise::Simplex);
-	biome_blend_noise.SetFrequency(0.1);
+	biome_blend_noise.SetFrequency(0.05);
 
 	// Ocean Biome
 	world_biomes.push_back({
 		.min_cont = -1.0,
-		.max_cont = -0.5,
-		.terain_min = -40,
-		.terain_max = -10,
+		.max_cont = -0.8,
+		.terain_min = -50,
+		.terain_max = -40,
+		.upper_block = 5
+	});
+	world_biomes.push_back({
+		.min_cont = -0.8,
+		.max_cont = -0.2,
+		.terain_min = -10,
+		.terain_max = -5,
 		.upper_block = 5
 	});
 	// Beach
 	world_biomes.push_back({
-		.min_cont = -0.5,
+		.min_cont = -0.2,
 		.max_cont = -0.1,
-		.terain_min = 0,
+		.min_temp = -0.5,
+		.terain_min = -5,
 		.terain_max = 5,
 		.upper_block = 6
+	});
+	// Snow Beach
+	world_biomes.push_back({
+		.min_cont = -0.2,
+		.max_cont = -0.1,
+		.max_temp = -0.5,
+		.terain_min = -5,
+		.terain_max = 5,
+		.upper_block = 5
 	});
 	// Plains
 	world_biomes.push_back({
 		.min_cont = -0.1,
 		.max_cont = 0.7,
-		.terain_min = 5.0,
+		.min_temp = -0.5,
+		.max_temp = 0.5,
+		.terain_min = 3.0,
 		.terain_max = 15.0,
 		.upper_block = 3,
 		.toper_block = 2
 	});
-	// Mountains
+
+	// Desert
+	world_biomes.push_back({
+		.min_cont = -0.1,
+		.max_cont = 0.7,
+		.min_temp = 0.5,
+		.terain_min = 5.0,
+		.terain_max = 15.0,
+		.upper_block = 6,
+	});
+	// Snow Plains 
+	world_biomes.push_back({
+		.min_cont = -0.1,
+		.max_cont = 0.7,
+		.max_temp = -0.5,
+		.terain_min = 5.0,
+		.terain_max = 15.0,
+		.upper_block = 4,
+	});
+	// Hills 
 	world_biomes.push_back({
 		.min_cont = 0.7,
-		.max_cont = 1.0,
-		.terain_min = 40.0,
+		.max_cont = 0.8,
+		.min_temp = -0.5,
+		.terain_min = 10.0,
 		.terain_max = 60.0,
 		.upper_block = 1
+	});
+	// Snow Hills 
+	world_biomes.push_back({
+		.min_cont = 0.7,
+		.max_cont = 0.8,
+		.max_temp = -0.5,
+		.terain_min = 10.0,
+		.terain_max = 60.0,
+		.upper_block = 4 
+	});
+	// Peaks
+	world_biomes.push_back({
+		.min_cont = 0.8,
+		.max_cont = 1.0,
+		.terain_min = 30.0,
+		.terain_max = 120.0,
+		.upper_block = 4 
 	});
 }
 
@@ -65,10 +130,11 @@ BiomeDef WorldGenerator::GetBiomeRaw(ChunkPosition map_position)
 		return world_biome_cache.at(map_position);
 	}
 	float cont = continentalness.GetNoise(map_position.x, map_position.z);
+	float temp = temperature.GetNoise(map_position.x, map_position.z);
 	BiomeDef best_fit = world_biomes.front();
 	bool found_biome_fit = false;;
 	for (BiomeDef biome : world_biomes) {
-		if (biome.CheckFit(cont)) {
+		if (biome.CheckFit(cont, temp)) {
 			best_fit = biome;
 			found_biome_fit = true;
 		}
@@ -81,11 +147,12 @@ BiomeDef WorldGenerator::GetBiomeRaw(ChunkPosition map_position)
 
 BiomeDef WorldGenerator::GetBiome(ChunkPosition map_position)
 {
-	int test_x = floor(map_position.x / 8.0);
-	int test_z = floor(map_position.z / 8.0);
-	float blend_ud = (map_position.z - (test_z * 8)) / 8.0f;
-	float blend_rl = (map_position.x - (test_x * 8)) / 8.0f;
+	int test_x = floor(map_position.x / 16.0);
+	int test_z = floor(map_position.z / 16.0);
+	float blend_ud = (map_position.z - (test_z * 16)) / 16.0f;
+	float blend_rl = (map_position.x - (test_x * 16)) / 16.0f;
 
+	// I got the lerping code backwards, just ignore it for now
 	blend_rl = 1.0 - blend_rl;
 	blend_ud = 1.0 - blend_ud;
 
@@ -174,8 +241,8 @@ void WorldGenerator::PopulateChunk(Chunk *chunk)
 			int x = cpos.x * CHUNK_SIZE + cx;
 			int z = cpos.z * CHUNK_SIZE + cz;
 
-			int biome_off_x = biome_blend_noise.GetNoise(x, z, -10) * 4;
-			int biome_off_z = biome_blend_noise.GetNoise(x, z, 10) * 4;
+			int biome_off_x = biome_blend_noise.GetNoise(x, z, -100) * 12;
+			int biome_off_z = biome_blend_noise.GetNoise(x, z, 100) * 12;
 
 			BiomeDef biome = GetBiome({x + biome_off_x, 0, z + biome_off_z});
 
