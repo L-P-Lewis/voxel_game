@@ -91,12 +91,21 @@ void Chunk::RegnerateMesh(BlockRegistry *block_registry)
 		delete this->mesh;
 	}
 
+
+	if (this->fluid_mesh != nullptr) {
+		delete this->fluid_mesh;
+	}
+
 	std::vector<ChunkVertex> vertices;
 	std::vector<unsigned int> indices;
+	
+	std::vector<ChunkVertex> fl_verts;
+	std::vector<unsigned int> fl_inds;
 
 	float texture_size = 1.0;
 	
 	unsigned int index = 0;
+	unsigned int fl_index = 0;
 	for (int x = 0; x < CHUNK_SIZE; x++) {
 		for (int y = 0; y < CHUNK_SIZE; y++) {
 			for (int z = 0; z < CHUNK_SIZE; z++) {
@@ -112,27 +121,36 @@ void Chunk::RegnerateMesh(BlockRegistry *block_registry)
 				glm::vec3 use(x + 1, y + 1, z);
 				glm::vec3 une(x + 1, y + 1, z + 1);
 
+				
 				// UD Faces (Y Axis)
-				if (y == CHUNK_SIZE - 1 || blocks[x][y + 1][z] == 0) {
-					GenerateFace(usw, unw, use, une, block.up_texture, glm::vec3(0, 1, 0), index, vertices, indices); 
+				if (y == CHUNK_SIZE - 1 || blocks[x][y + 1][z] == 0 || (blocks[x][y + 1][z] == 7 && blocks[x][y][z] != 7)) {
+					if (block.type == 0) {
+						GenerateFace(usw, unw, use, une, block.up_texture, glm::vec3(0, 1, 0), index, vertices, indices);
+					} else if (block.type == 1) {
+						glm::vec3 off(0, -0.2, 0);
+					
+						GenerateFace(usw + off, unw + off, use + off, une + off, block.up_texture, glm::vec3(0, 1, 0), fl_index, fl_verts, fl_inds);
+					}
 				}
-				if (y == 0 || blocks[x][y - 1][z] == 0) {
+
+				if (block.type != 0) continue;
+				if (y == 0 || blocks[x][y - 1][z] == 0 || blocks[x][y - 1][z] == 7) {
 					GenerateFace(dnw, dsw, dne, dse, block.down_texture, glm::vec3(0, -1, 0), index, vertices, indices);
 				}
 
 				// NS Faces (Z Axis)
-				if (z == CHUNK_SIZE - 1 || blocks[x][y][z + 1] == 0) {
+				if (z == CHUNK_SIZE - 1 || blocks[x][y][z + 1] == 0 || blocks[x][y][z + 1] == 7) {
 					GenerateFace(dne, une, dnw, unw, block.north_texture, glm::vec3(0, 0, 1), index, vertices, indices);
 				}
-				if (z == 0 || blocks[x][y][z - 1] == 0) {
+				if (z == 0 || blocks[x][y][z - 1] == 0 || blocks[x][y][z - 1] == 7) {
 					GenerateFace(dsw, usw, dse, use, block.south_texture, glm::vec3(0, 0, -1), index, vertices, indices);
 				}
 
 				// EW Faces (X Axis)
-				if (x == CHUNK_SIZE - 1 || blocks[x+1][y][z] == 0) {
+				if (x == CHUNK_SIZE - 1 || blocks[x+1][y][z] == 0 || blocks[x + 1][y][z] == 7) {
 					GenerateFace(dse, use, dne, une, block.west_texture, glm::vec3(1, 0, 0), index, vertices, indices);
 				}
-				if (x == 0  || blocks[x-1][y][z] == 0) {
+				if (x == 0  || blocks[x-1][y][z] == 0 || blocks[x - 1][y][z] == 7) {
 					GenerateFace(dnw, unw, dsw, usw, block.west_texture, glm::vec3(-1, 0, 0), index, vertices, indices);
 				}
 
@@ -142,15 +160,27 @@ void Chunk::RegnerateMesh(BlockRegistry *block_registry)
 	}
 	if (indices.empty()) {
 		this->mesh = nullptr;
-		return;
+	} else {
+
+		this->mesh = new ChunkMesh(vertices, indices);
+	}
+	if (fl_inds.empty()) {
+		this->fluid_mesh= nullptr;
+	} else {
+		this->fluid_mesh = new ChunkMesh(fl_verts, fl_inds);
 	}
 
-	this->mesh = new ChunkMesh(vertices, indices);
 }
 
 void Chunk::Draw(Shader &shader)
 {
 	if (mesh != nullptr) mesh->Draw(shader);
+}
+
+
+void Chunk::DrawFluid(Shader &shader)
+{
+	if (fluid_mesh != nullptr) fluid_mesh->Draw(shader);
 }
 
 glm::mat4 Chunk::GetChunkTransform() const {

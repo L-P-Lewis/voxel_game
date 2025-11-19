@@ -213,8 +213,11 @@ void GenerateColumn(Chunk *chunk, int cx, int cz, int floor_height, int toplayer
 {
 	int chunk_floor = chunk->GetPosition().y * CHUNK_SIZE;
 	int relative_floor = floor_height - chunk_floor;
-	if (relative_floor < 0) return;
+	int relative_sea = 0 - chunk_floor;
+	if (relative_floor < 0) relative_floor = 0;
 	if (relative_floor > CHUNK_SIZE) relative_floor = CHUNK_SIZE;
+	if (relative_sea < 0) relative_sea = 0;
+	if (relative_sea > CHUNK_SIZE) relative_sea = CHUNK_SIZE;
 	for (int y = 0; y < relative_floor; y++) {
 		int gy = chunk_floor + y;
 		int depth = floor_height - gy;
@@ -226,6 +229,9 @@ void GenerateColumn(Chunk *chunk, int cx, int cz, int floor_height, int toplayer
 			}
 		}
 		chunk->SetBlock(cx, y, cz, block);
+	}
+	for (int y = relative_floor; y < relative_sea; y++) {
+		chunk->SetBlock(cx, y, cz, 7);
 	}
 }
 

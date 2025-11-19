@@ -77,6 +77,8 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	glm::mat4 projection(1.0f);
@@ -88,6 +90,8 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 	shader.set_uniform("view", view);
 
 	terrain.Use();
+
+	std::vector<ChunkID> to_draw;
 
 	for (auto const& [pos, id] : m.active_chunks) {
 		Chunk *chunk = &m.chunks[id];
@@ -102,7 +106,14 @@ void GameWorld::Draw(Camera &camera, Shader &shader, Texture &terrain)
 
 		shader.set_uniform("model", m.chunks[id].GetChunkTransform());
 		m.chunks[id].Draw(shader);
+		to_draw.push_back(id);
 	}
+
+	for (auto id : to_draw) {
+		shader.set_uniform("model", m.chunks[id].GetChunkTransform());
+		m.chunks[id].DrawFluid(shader);
+	}
+
 }
 
 

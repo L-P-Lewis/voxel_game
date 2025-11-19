@@ -41,6 +41,7 @@ GameLayer* GameLayer::New()
 	registry.RegisterBlock("snow", Block::AllSides(5));
 	registry.RegisterBlock("gravel", Block::AllSides(6));
 	registry.RegisterBlock("sand", Block::AllSides(7));
+	registry.RegisterBlock("water", Block::Fluid(8));
 
 
 	Shader shader = VoxelGame::getAssetManager().GetShader("chunk_shader");

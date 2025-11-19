@@ -12,5 +12,5 @@ void main()
 {
     vec3 light = mix(vec3(0.1, 0.1, 0.2), vec3(1), fLight);
     FragColor.rgb = texture(albedo, vTexCord).rgb * light;
-    FragColor.a = 1.0;
+    FragColor.a = texture(albedo, vTexCord).a;
 }

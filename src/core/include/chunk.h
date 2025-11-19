@@ -59,6 +59,7 @@ class Chunk {
 		BlockHandle blocks[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
 		ChunkPosition pos;
 		ChunkMesh *mesh;
+		ChunkMesh *fluid_mesh;
 	public:
 		void Init(ChunkPosition position) {
 			pos = position;
@@ -67,6 +68,7 @@ class Chunk {
 		void Fill(BlockHandle handle);
 		void RegnerateMesh(BlockRegistry *block_registry);
 		void Draw(Shader &shader);
+		void DrawFluid(Shader &shader);
 		glm::mat4 GetChunkTransform() const;
 		ChunkPosition GetPosition() const {return pos;};
 		BlockHandle GetBlock(int x, int y, int z) {
