@@ -2,6 +2,7 @@
 #include "assets/shader.h"
 #include "assets/texture.h"
 #include "block.h"
+#include "chunk.h"
 #include "game_world.h"
 #include "worldgen.h"
 #ifndef VOXEL_CORE_LAYER_TEST_LAYER_H_
@@ -22,7 +23,10 @@ class GameLayer : public AppLayer {
 			Camera camera;
 			BlockRegistry registry;
 			Texture terrain;
+			Texture skybox;
+			ChunkMesh skybox_mesh;
 			Shader chunk_shader;
+			Shader sky_shader;
 			GameWorld world;
 			WorldGenerator generator;
 			RenderTexture framebuffer;
